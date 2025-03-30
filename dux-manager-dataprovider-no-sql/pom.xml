@@ -18,35 +18,28 @@
 	<!-- #### P R O J E C T _ D E S C R I P T I O N ############################## -->
 	<!-- ######################################################################### -->
 
-	<artifactId>dux-manager-application</artifactId>
-	<name>DUX Manager :: Application</name>
-	<description>Digital User Context Manager Application Module</description>
+	<artifactId>dux-manager-dataprovider-no-sql</artifactId>
+	<name>DUX Manager :: Data Provider No SQL</name>
+	<description>Digital User Context Manager Data Provider No SQL Module</description>
 
 	<!-- #########################################################################  -->
 	<!-- #### P R O J E C T _ D E P E N D E N C I E S ############################ -->
 	<!-- ######################################################################### -->
 
 	<dependencies>
+		<!-- internal dependencies -->
 		<dependency>
 			<groupId>com.tracktainment</groupId>
 			<artifactId>dux-manager-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.tracktainment</groupId>
-			<artifactId>dux-manager-entrypoint-rest</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.tracktainment</groupId>
-			<artifactId>dux-manager-dataprovider-no-sql</artifactId>
-		</dependency>
-	</dependencies>
 
+		<!-- external dependencies -->
+	</dependencies>
 	<!-- #########################################################################  -->
 	<!-- #### P R O J E C T _ P R O P E R T I E S ################################ -->
 	<!-- ######################################################################### -->
 
 	<properties>
-		<start-class>com.tracktainment.DuxManagerApplication</start-class>
 	</properties>
 
 	<!-- #########################################################################  -->
@@ -54,38 +47,6 @@
 	<!-- ######################################################################### -->
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-plugin.version}</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>${lombok.version}</version>
-						</path>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok-mapstruct-binding</artifactId>
-							<version>${lombok-mapstruct-binding.version}</version>
-						</path>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${mapstruct.version}</version>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-		</plugins>
 	</build>
 
 </project>
