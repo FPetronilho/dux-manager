@@ -1,6 +1,6 @@
 package com.tracktainment.duxmanager.usecases.digitaluser;
 
-import com.tracktainment.duxmanager.dataprovider.DuxDataProvider;
+import com.tracktainment.duxmanager.dataprovider.DigitalUserDataProvider;
 import com.tracktainment.duxmanager.domain.DigitalUser;
 import com.tracktainment.duxmanager.dto.DigitalUserCreate;
 import lombok.*;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CreateUseCase {
 
-    private final DuxDataProvider duxDataProvider;
+    private final DigitalUserDataProvider digitalUserDataProvider;
 
     public Output execute(Input input) {
         return Output.builder()
-                .digitalUser(duxDataProvider.createDigitalUser(input.getDigitalUserCreate()))
+                .digitalUser(digitalUserDataProvider.create(input.getDigitalUserCreate()))
                 .build();
     }
 

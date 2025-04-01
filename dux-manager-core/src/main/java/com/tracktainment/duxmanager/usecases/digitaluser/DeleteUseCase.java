@@ -1,8 +1,6 @@
 package com.tracktainment.duxmanager.usecases.digitaluser;
 
-import com.tracktainment.duxmanager.dataprovider.DuxDataProvider;
-import com.tracktainment.duxmanager.domain.DigitalUser;
-import com.tracktainment.duxmanager.dto.DigitalUserCreate;
+import com.tracktainment.duxmanager.dataprovider.DigitalUserDataProvider;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class DeleteUseCase {
 
-    private final DuxDataProvider duxDataProvider;
+    private final DigitalUserDataProvider digitalUserDataProvider;
 
     public void execute(Input input) {
-        duxDataProvider.deleteDigitalUser(input.getDigitalUserId());
+        digitalUserDataProvider.delete(input.getDigitalUserId());
     }
 
     @AllArgsConstructor

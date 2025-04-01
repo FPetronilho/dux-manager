@@ -1,6 +1,6 @@
 package com.tracktainment.duxmanager.usecases.asset;
 
-import com.tracktainment.duxmanager.dataprovider.DuxDataProvider;
+import com.tracktainment.duxmanager.dataprovider.AssetDataProvider;
 import com.tracktainment.duxmanager.domain.Asset;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +14,11 @@ import java.util.List;
 @Slf4j
 public class ListByCriteriaUseCase {
 
-    private final DuxDataProvider duxDataProvider;
+    private final AssetDataProvider assetDataProvider;
 
     public Output execute(Input input) {
         return Output.builder()
-                .assets(duxDataProvider.listAssetsByCriteria(input))
+                .assets(assetDataProvider.listByCriteria(input))
                 .build();
     }
 

@@ -1,6 +1,6 @@
 package com.tracktainment.duxmanager.usecases.asset;
 
-import com.tracktainment.duxmanager.dataprovider.DuxDataProvider;
+import com.tracktainment.duxmanager.dataprovider.AssetDataProvider;
 import com.tracktainment.duxmanager.domain.Asset;
 import com.tracktainment.duxmanager.dto.AssetCreate;
 import lombok.*;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CreateUseCase {
 
-    private final DuxDataProvider duxDataProvider;
+    private final AssetDataProvider assetDataProvider;
 
     public Output execute(Input input) {
         return Output.builder()
-                .asset(duxDataProvider.createAsset(
+                .asset(assetDataProvider.create(
                         input.getDigitalUserId(),
                         input.getAssetCreate()
                 ))

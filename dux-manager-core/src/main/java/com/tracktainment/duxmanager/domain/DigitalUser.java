@@ -51,7 +51,7 @@ public class DigitalUser extends BaseObject {
     @Data
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private static class PersonalInformation {
+    public static class PersonalInformation {
 
         private String fullName;
         private String firstName;
@@ -66,7 +66,7 @@ public class DigitalUser extends BaseObject {
     @Data
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private static class ContactMedium {
+    public static class ContactMedium {
 
         private boolean preferred;
         private Type type;

@@ -11,6 +11,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DigitalUserCreate {
 
     private IdentityProviderInformation identityProviderInformation;
@@ -28,7 +33,7 @@ public class DigitalUserCreate {
         @Pattern(regexp = Constants.SUB_REGEX, message = Constants.SUB_INVALID_MSG)
         private String subject;
 
-        private IdentityProviderInformation.IdentityProvider identityProvider;
+        private IdentityProvider identityProvider;
 
         @NotNull(message = Constants.USER_TENANT_ID_MANDATORY_MSG)
         @Pattern(regexp = Constants.TENANT_ID_REGEX, message = Constants.TENANT_ID_INVALID_MSG)
@@ -53,7 +58,7 @@ public class DigitalUserCreate {
     @Data
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private static class PersonalInformation {
+    public static class PersonalInformation {
 
         @Pattern(regexp = Constants.FULL_NAME_REGEX, message = Constants.FULL_NAME_INVALID_MSG)
         private String fullName;
@@ -79,11 +84,11 @@ public class DigitalUserCreate {
     @Data
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private static class ContactMedium {
+    public static class ContactMedium {
 
         private boolean preferred;
-        private ContactMedium.Type type;
-        private ContactMedium.Characteristic characteristic;
+        private Type type;
+        private Characteristic characteristic;
 
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         private LocalDateTime expiresAt;
@@ -106,7 +111,7 @@ public class DigitalUserCreate {
         @Data
         @Builder
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        private static class Characteristic {
+        public static class Characteristic {
 
             // Phone
             @Pattern(regexp = Constants.COUNTRY_CODE_REGEX, message = Constants.COUNTRY_CODE_INVALID_MSG)
