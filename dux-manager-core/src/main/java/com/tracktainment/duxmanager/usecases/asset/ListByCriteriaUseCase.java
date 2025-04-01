@@ -31,7 +31,7 @@ public class ListByCriteriaUseCase {
         private Integer offset;
         private Integer limit;
         private String digitalUserId;
-        private List<String> externalIds;
+        private String externalIds;
         private String groupId;
         private String artifactId;
         private String type;
