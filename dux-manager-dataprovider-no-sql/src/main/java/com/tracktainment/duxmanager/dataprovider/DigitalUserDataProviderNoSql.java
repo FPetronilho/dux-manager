@@ -52,10 +52,10 @@ public class DigitalUserDataProviderNoSql implements DigitalUserDataProvider {
 
     @Override
     public void delete(String id) {
-        Query query = new Query().addCriteria(Criteria.where("id").is(id));
+        Query query = new Query(Criteria.where("id").is(id));
         DeleteResult deleteResult = mongoTemplate.remove(query, DigitalUserDocument.class);
 
-        if (deleteResult.getDeletedCount() == 0) {
+        if (!deleteResult.wasAcknowledged() || deleteResult.getDeletedCount() == 0) {
             throw new ResourceNotFoundException(DigitalUserDocument.class, id);
         }
     }
@@ -73,13 +73,18 @@ public class DigitalUserDataProviderNoSql implements DigitalUserDataProvider {
         return mongoTemplate.exists(query, DigitalUserDocument.class);
     }
 
-    private DigitalUserDocument findDigitalUserDocumentById(String id) {
-        Query query = new Query().addCriteria(Criteria.where("id").is(id));
+    public boolean existsById(String id) {
+        Query query = new Query(Criteria.where("id").is(id));
+        return mongoTemplate.exists(query, DigitalUserDocument.class);
+    }
+
+    public DigitalUserDocument findDigitalUserDocumentById(String id) {
+        Query query = new Query(Criteria.where("id").is(id));
         DigitalUserDocument digitalUserDocument = mongoTemplate.findOne(query, DigitalUserDocument.class);
 
-        digitalUserDocument = Optional.ofNullable(digitalUserDocument).orElseThrow(
-                () -> new ResourceNotFoundException(DigitalUserDocument.class, id)
-        );
+        if (digitalUserDocument == null) {
+            throw new ResourceNotFoundException(DigitalUserDocument.class, id);
+        }
 
         return digitalUserDocument;
     }
