@@ -28,6 +28,18 @@ public interface DigitalUserRestApi {
             @PathVariable @Pattern(regexp = Constants.ID_REGEX, message = Constants.ID_INVALID_MSG) String id
     );
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<DigitalUser> findBySubAndIdPAndTenant(
+            @RequestParam(name = "identityProviderInformation.subject")
+            @Pattern(regexp = Constants.SUB_REGEX, message = Constants.SUB_INVALID_MSG) String subject,
+
+            @RequestParam(name = "identityProviderInformation.identityProvider")
+            DigitalUser.IdentityProviderInformation.IdentityProvider identityProvider,
+
+            @RequestParam(name = "identityProviderInformation.tenantId")
+            @Pattern(regexp = Constants.TENANT_ID_REGEX, message = Constants.TENANT_ID_INVALID_MSG) String tenantId
+    );
+
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(
             @PathVariable @Pattern(regexp = Constants.ID_REGEX, message = Constants.ID_INVALID_MSG) String id

@@ -9,5 +9,11 @@ public interface DigitalUserDataProvider {
 
     DigitalUser findById(String id);
 
+    DigitalUser findBySubAndIdPAndTenant(
+            String subject,
+            DigitalUser.IdentityProviderInformation.IdentityProvider identityProvider,
+            String tenantId
+    );
+
     void delete(String id);
 }

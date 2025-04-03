@@ -53,6 +53,28 @@ public class DigitalUserDataProviderNoSql implements DigitalUserDataProvider {
     }
 
     @Override
+    public DigitalUser findBySubAndIdPAndTenant(String subject, DigitalUser.IdentityProviderInformation.IdentityProvider identityProvider, String tenantId) {
+        Query query = new Query().addCriteria(Criteria.where("identityProviderInformation.subject").is(subject))
+                .addCriteria(Criteria.where("identityProviderInformation.identityProvider").is(identityProvider))
+                .addCriteria(Criteria.where("identityProviderInformation.tenantId").is(tenantId));
+
+        DigitalUserDocument digitalUserDocument = mongoTemplate.findOne(query, DigitalUserDocument.class);
+        if (digitalUserDocument == null) {
+            throw new ResourceNotFoundException(
+                    DigitalUserDocument.class,
+                    String.format(
+                            "with combination of subject: %s, identity provider: %s and tenant ID: %s",
+                            subject,
+                            identityProvider,
+                            tenantId
+                    )
+            );
+        }
+
+        return mapper.toDigitalUser(digitalUserDocument);
+    }
+
+    @Override
     @Transactional
     public void delete(String id) {
         Query query = new Query(Criteria.where("id").is(id));

@@ -6,6 +6,7 @@ import com.tracktainment.duxmanager.dto.DigitalUserCreate;
 import com.tracktainment.duxmanager.usecases.digitaluser.CreateDigitalUserUseCase;
 import com.tracktainment.duxmanager.usecases.digitaluser.DeleteDigitalUserUseCase;
 import com.tracktainment.duxmanager.usecases.digitaluser.FindDigitalUserByIdUseCase;
+import com.tracktainment.duxmanager.usecases.digitaluser.FindDigitalUserBySubAndIdPAndTenantUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class DigitalUserRestController implements DigitalUserRestApi {
 
     private final CreateDigitalUserUseCase createDigitalUserUseCase;
     private final FindDigitalUserByIdUseCase findDigitalUserByIdUseCase;
+    private final FindDigitalUserBySubAndIdPAndTenantUseCase findDigitalUserBySubAndIdPAndTenantUseCase;
     private final DeleteDigitalUserUseCase deleteDigitalUserUseCase;
 
     @Override
@@ -42,6 +44,32 @@ public class DigitalUserRestController implements DigitalUserRestApi {
                 .build();
 
         FindDigitalUserByIdUseCase.Output output = findDigitalUserByIdUseCase.execute(input);
+        return new ResponseEntity<>(output.getDigitalUser(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<DigitalUser> findBySubAndIdPAndTenant(
+            String subject,
+            DigitalUser.IdentityProviderInformation.IdentityProvider identityProvider,
+            String tenantId
+    ) {
+        log.info(
+                "Finding digital user by subject: {}, identity provider: {} and tenant ID: {}",
+                subject,
+                identityProvider,
+                tenantId
+        );
+
+        FindDigitalUserBySubAndIdPAndTenantUseCase.Input input =
+                FindDigitalUserBySubAndIdPAndTenantUseCase.Input.builder()
+                .subject(subject)
+                .identityProvider(identityProvider)
+                .tenantId(tenantId)
+                .build();
+
+        FindDigitalUserBySubAndIdPAndTenantUseCase.Output output =
+                findDigitalUserBySubAndIdPAndTenantUseCase.execute(input);
+
         return new ResponseEntity<>(output.getDigitalUser(), HttpStatus.OK);
     }
 
