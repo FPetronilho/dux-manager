@@ -91,7 +91,7 @@ public class DigitalUser extends BaseObject {
         @Data
         @Builder
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        private static class Characteristic {
+        public static class Characteristic {
 
             // Phone
             private String countryCode;

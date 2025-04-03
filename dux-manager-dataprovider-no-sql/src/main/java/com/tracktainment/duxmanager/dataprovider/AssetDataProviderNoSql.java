@@ -7,7 +7,7 @@ import com.tracktainment.duxmanager.dto.AssetCreate;
 import com.tracktainment.duxmanager.exception.ResourceAlreadyExistsException;
 import com.tracktainment.duxmanager.exception.ResourceNotFoundException;
 import com.tracktainment.duxmanager.mapper.AssetMapperDataProvider;
-import com.tracktainment.duxmanager.usecases.asset.ListByCriteriaUseCase;
+import com.tracktainment.duxmanager.usecases.asset.ListAssetsByCriteriaUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -59,7 +59,7 @@ public class AssetDataProviderNoSql implements AssetDataProvider {
     }
 
     @Override
-    public List<Asset> listByCriteria(ListByCriteriaUseCase.Input input) {
+    public List<Asset> listByCriteria(ListAssetsByCriteriaUseCase.Input input) {
         Query query = new Query();
         Criteria criteria = new Criteria();
 
@@ -71,11 +71,19 @@ public class AssetDataProviderNoSql implements AssetDataProvider {
             }
         }
 
-        criteria.and("assets.artifactInformation.groupId").is(input.getGroupId())
-                .and("assets.artifactInformation.artifactId").is(input.getArtifactId())
-                .and("assets.type").is(input.getType());
+        if (input.getGroupId() != null) {
+            criteria.and("assets.artifactInformation.groupId").is(input.getGroupId());
+        }
 
-        if (!input.getExternalIds().isEmpty()) {
+        if (input.getArtifactId() != null) {
+            criteria.and("assets.artifactInformation.artifactId").is(input.getArtifactId());
+        }
+
+        if (input.getType() != null) {
+            criteria.and("assets.type").is(input.getType());
+        }
+
+        if (input.getExternalIds() != null && !input.getExternalIds().isEmpty()) {
             criteria.and("assets.externalId").in(input.getExternalIds());
         }
 
@@ -103,8 +111,8 @@ public class AssetDataProviderNoSql implements AssetDataProvider {
     @Override
     @Transactional
     public void delete(String digitalUserId, String externalId) {
-        if (existsByExternalId(digitalUserId, externalId)) {
-            throw new ResourceAlreadyExistsException(Asset.class, externalId);
+        if (!existsByExternalId(digitalUserId, externalId)) {
+            throw new ResourceNotFoundException(Asset.class, externalId);
         }
 
         Query query = new Query(Criteria.where("id").is(digitalUserId));

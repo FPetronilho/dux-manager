@@ -3,9 +3,9 @@ package com.tracktainment.duxmanager.controller;
 import com.tracktainment.duxmanager.api.AssetRestApi;
 import com.tracktainment.duxmanager.domain.Asset;
 import com.tracktainment.duxmanager.dto.AssetCreate;
-import com.tracktainment.duxmanager.usecases.asset.CreateUseCase;
-import com.tracktainment.duxmanager.usecases.asset.DeleteUseCase;
-import com.tracktainment.duxmanager.usecases.asset.ListByCriteriaUseCase;
+import com.tracktainment.duxmanager.usecases.asset.CreateAssetUseCase;
+import com.tracktainment.duxmanager.usecases.asset.DeleteAssetUseCase;
+import com.tracktainment.duxmanager.usecases.asset.ListAssetsByCriteriaUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,19 +22,19 @@ import java.util.List;
 @Slf4j
 public class AssetRestController implements AssetRestApi {
 
-    private final CreateUseCase createUseCase;
-    private final ListByCriteriaUseCase listByCriteriaUseCase;
-    private final DeleteUseCase deleteUseCase;
+    private final CreateAssetUseCase createAssetUseCase;
+    private final ListAssetsByCriteriaUseCase listAssetsByCriteriaUseCase;
+    private final DeleteAssetUseCase deleteAssetUseCase;
 
     @Override
     public ResponseEntity<Asset> create(String digitalUserId, AssetCreate assetCreate) {
-        log.info("Create asset on digital user {}: {}", digitalUserId, assetCreate);
-        CreateUseCase.Input input = CreateUseCase.Input.builder()
+        log.info("Creating asset on digital user {}: {}", digitalUserId, assetCreate);
+        CreateAssetUseCase.Input input = CreateAssetUseCase.Input.builder()
                 .digitalUserId(digitalUserId)
                 .assetCreate(assetCreate)
                 .build();
 
-        CreateUseCase.Output output = createUseCase.execute(input);
+        CreateAssetUseCase.Output output = createAssetUseCase.execute(input);
         return new ResponseEntity<>(output.getAsset(), HttpStatus.CREATED);
     }
 
@@ -51,7 +51,7 @@ public class AssetRestController implements AssetRestApi {
             LocalDate from,
             LocalDate to
     ) {
-        ListByCriteriaUseCase.Input input = ListByCriteriaUseCase.Input.builder()
+        ListAssetsByCriteriaUseCase.Input input = ListAssetsByCriteriaUseCase.Input.builder()
                 .offset(offset)
                 .limit(limit)
                 .digitalUserId(digitalUserId)
@@ -65,19 +65,19 @@ public class AssetRestController implements AssetRestApi {
                 .build();
 
         log.info("Listing assets by criteria: {}", input);
-        ListByCriteriaUseCase.Output output = listByCriteriaUseCase.execute(input);
+        ListAssetsByCriteriaUseCase.Output output = listAssetsByCriteriaUseCase.execute(input);
         return new ResponseEntity<>(output.getAssets(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> delete(String digitalUserId, String externalId) {
         log.info("Deleting asset with id {} from digital user {}.", externalId, digitalUserId);
-        DeleteUseCase.Input input = DeleteUseCase.Input.builder()
+        DeleteAssetUseCase.Input input = DeleteAssetUseCase.Input.builder()
                 .digitalUserId(digitalUserId)
                 .externalId(externalId)
                 .build();
 
-        deleteUseCase.execute(input);
+        deleteAssetUseCase.execute(input);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

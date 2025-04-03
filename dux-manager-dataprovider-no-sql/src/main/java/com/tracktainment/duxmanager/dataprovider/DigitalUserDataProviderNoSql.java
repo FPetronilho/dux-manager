@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ public class DigitalUserDataProviderNoSql implements DigitalUserDataProvider {
     private final MongoTemplate mongoTemplate;
 
     @Override
+    @Transactional
     public DigitalUser create(DigitalUserCreate digitalUserCreate) {
         if (existsBySubjectAndIdentityProviderAndTenant(
                 digitalUserCreate.getIdentityProviderInformation().getSubject(),
@@ -51,11 +53,12 @@ public class DigitalUserDataProviderNoSql implements DigitalUserDataProvider {
     }
 
     @Override
+    @Transactional
     public void delete(String id) {
         Query query = new Query(Criteria.where("id").is(id));
         DeleteResult deleteResult = mongoTemplate.remove(query, DigitalUserDocument.class);
 
-        if (!deleteResult.wasAcknowledged() || deleteResult.getDeletedCount() == 0) {
+        if (deleteResult.getDeletedCount() == 0) {
             throw new ResourceNotFoundException(DigitalUserDocument.class, id);
         }
     }

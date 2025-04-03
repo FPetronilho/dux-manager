@@ -3,9 +3,9 @@ package com.tracktainment.duxmanager.controller;
 import com.tracktainment.duxmanager.api.DigitalUserRestApi;
 import com.tracktainment.duxmanager.domain.DigitalUser;
 import com.tracktainment.duxmanager.dto.DigitalUserCreate;
-import com.tracktainment.duxmanager.usecases.digitaluser.CreateUseCase;
-import com.tracktainment.duxmanager.usecases.digitaluser.DeleteUseCase;
-import com.tracktainment.duxmanager.usecases.digitaluser.FindByIdUseCase;
+import com.tracktainment.duxmanager.usecases.digitaluser.CreateDigitalUserUseCase;
+import com.tracktainment.duxmanager.usecases.digitaluser.DeleteDigitalUserUseCase;
+import com.tracktainment.duxmanager.usecases.digitaluser.FindDigitalUserByIdUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,39 +19,40 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class DigitalUserRestController implements DigitalUserRestApi {
 
-    private final CreateUseCase createUseCase;
-    private final FindByIdUseCase findByIdUseCase;
-    private final DeleteUseCase deleteUseCase;
+    private final CreateDigitalUserUseCase createDigitalUserUseCase;
+    private final FindDigitalUserByIdUseCase findDigitalUserByIdUseCase;
+    private final DeleteDigitalUserUseCase deleteDigitalUserUseCase;
 
     @Override
     public ResponseEntity<DigitalUser> create(DigitalUserCreate digitalUserCreate) {
         log.info("Creating digital user: {}", digitalUserCreate);
-        CreateUseCase.Input input = CreateUseCase.Input.builder()
+        CreateDigitalUserUseCase.Input input = CreateDigitalUserUseCase.Input.builder()
                 .digitalUserCreate(digitalUserCreate)
                 .build();
 
-        CreateUseCase.Output output = createUseCase.execute(input);
+        CreateDigitalUserUseCase.Output output = createDigitalUserUseCase.execute(input);
         return new ResponseEntity<>(output.getDigitalUser(), HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<DigitalUser> findById(String id) {
         log.info("Finding digital user by id: {}", id);
-        FindByIdUseCase.Input input = FindByIdUseCase.Input.builder()
+        FindDigitalUserByIdUseCase.Input input = FindDigitalUserByIdUseCase.Input.builder()
                 .digitalUserId(id)
                 .build();
 
-        FindByIdUseCase.Output output = findByIdUseCase.execute(input);
+        FindDigitalUserByIdUseCase.Output output = findDigitalUserByIdUseCase.execute(input);
         return new ResponseEntity<>(output.getDigitalUser(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> delete(String id) {
         log.info("Deleting digital user by id: {}", id);
-        DeleteUseCase.Input input = DeleteUseCase.Input.builder()
+        DeleteDigitalUserUseCase.Input input = DeleteDigitalUserUseCase.Input.builder()
                 .digitalUserId(id)
                 .build();
 
+        deleteDigitalUserUseCase.execute(input);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

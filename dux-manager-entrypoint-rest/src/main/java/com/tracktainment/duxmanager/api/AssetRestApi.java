@@ -27,7 +27,7 @@ public interface AssetRestApi {
     )
     ResponseEntity<Asset> create(
             @PathVariable
-            @Pattern(regexp = Constants.ID_REGEX, message = Constants.ID_INVALID_MSG) String digitalUserId,
+            @Pattern(regexp = Constants.ID_REGEX, message = Constants.DIGITAL_USER_ID_INVALID_MSG) String digitalUserId,
 
             @RequestBody @Valid AssetCreate assetCreate
     );
@@ -42,7 +42,7 @@ public interface AssetRestApi {
             @Max(value = Constants.MAX_LIMIT, message = Constants.LIMIT_INVALID_MSG) Integer limit,
 
             @RequestParam(required = false)
-            @Pattern(regexp = Constants.ID_REGEX, message = Constants.ID_INVALID_MSG) String digitalUserId,
+            @Pattern(regexp = Constants.ID_REGEX, message = Constants.DIGITAL_USER_ID_INVALID_MSG) String digitalUserId,
 
             @RequestParam(required = false)
             @Pattern(regexp = Constants.ID_LIST_REGEX, message = Constants.IDS_INVALID_MSG) String externalIds,
@@ -69,7 +69,7 @@ public interface AssetRestApi {
     @DeleteMapping
     ResponseEntity<Void> delete(
             @RequestParam
-            @Pattern(regexp = Constants.ID_REGEX, message = Constants.ID_INVALID_MSG) String digitalUserId,
+            @Pattern(regexp = Constants.ID_REGEX, message = Constants.DIGITAL_USER_ID_INVALID_MSG) String digitalUserId,
 
             @RequestParam
             @Pattern(regexp = Constants.ID_REGEX, message = Constants.ID_INVALID_MSG) String externalId
