@@ -24,6 +24,9 @@
         <module name="dux-manager-application" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="dux-manager-dataprovider-rest" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -31,6 +34,7 @@
       <module name="dux-manager-application" options="-parameters" />
       <module name="dux-manager-core" options="-parameters" />
       <module name="dux-manager-dataprovider-no-sql" options="-parameters" />
+      <module name="dux-manager-dataprovider-rest" options="-parameters" />
       <module name="dux-manager-entrypoint-rest" options="-parameters" />
     </option>
   </component>

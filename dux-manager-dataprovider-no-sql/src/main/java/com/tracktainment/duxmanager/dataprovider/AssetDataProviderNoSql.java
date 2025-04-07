@@ -84,7 +84,8 @@ public class AssetDataProviderNoSql implements AssetDataProvider {
         }
 
         if (input.getExternalIds() != null && !input.getExternalIds().isEmpty()) {
-            criteria.and("assets.externalId").in(input.getExternalIds());
+            List<String> ids = List.of(input.getExternalIds().split(","));
+            criteria.and("assets.externalId").in(ids);
         }
 
         if (input.getCreatedAt() != null) {
