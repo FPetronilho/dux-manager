@@ -71,6 +71,7 @@ The project follows a clean architecture with clear separation of concerns:
 - Java 17+
 - Maven
 - MongoDB or another compatible NoSQL database
+- Docker (optional, for containerized deployment)
 
 ### Configuration
 
@@ -92,6 +93,23 @@ mvn clean package
 ```bash
 java -jar dux-manager.jar
 ```
+
+### Docker Setup
+
+The dux-manager application can now be containerized using Docker. To run the application in Docker, follow these steps:
+- Step 1: Build the Docker Image - 
+Run the following command to build the Docker image:
+```
+docker-compose up --build
+```
+
+ - Step 2: Start the Containers - 
+Start the containers using the following command:
+```
+docker-compose up
+```
+
+The dux-manager service will be accessible at http://localhost:8081.
 
 ## Error Handling
 
@@ -133,6 +151,7 @@ The service includes comprehensive validation for all inputs:
 - Logging with SLF4J
 - MongoDB
 - Maven
+- Docker
 
 ### Project Structure
 
@@ -155,7 +174,6 @@ com.tracktainment.duxmanager
 - Authentication and authorization;
 - Unit testing;
 - Update protocol from HTTP to HTTPS;
-- Dockerize application;
 - Database encryption;
 - CI/CD pipeline.
 
