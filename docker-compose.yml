@@ -1,0 +1,100 @@
+services:
+  # PostgreSQL for book-manager
+  postgres-book:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 7346
+      POSTGRES_DB: book-manager
+    volumes:
+      - postgres-book-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # PostgreSQL for game-manager
+  postgres-game:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 7346
+      POSTGRES_DB: game-manager
+    volumes:
+      - postgres-game-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # MongoDB for dux-manager
+  mongodb:
+    image: mongo:6.0
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+  # Dux Manager Service
+  dux-manager:
+    build:
+      context: ../dux-manager
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/DuxManager
+      SERVER_PORT: 8080
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  # Book Manager Service
+  book-manager:
+    build:
+      context: ../book-manager
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-book:5432/book-manager
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 7346
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create
+      HTTP_URL_DUX_MANAGER: http://dux-manager:8080/dux-manager/api/v1
+    depends_on:
+      - postgres-book
+      - dux-manager
+    networks:
+      - app-network
+
+  # Game Manager Service
+  game-manager:
+    build:
+      context: ../game-manager
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-game:5432/game-manager
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 7346
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create
+      HTTP_URL_DUX_MANAGER: http://dux-manager:8080/dux-manager/api/v1
+    depends_on:
+      - postgres-game
+      - dux-manager
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-book-data:
+  postgres-game-data:
+  mongodb_data:

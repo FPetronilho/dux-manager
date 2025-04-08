@@ -44,7 +44,6 @@ public interface AssetRestApi {
             @RequestParam(required = false)
             @Pattern(regexp = Constants.ID_REGEX, message = Constants.DIGITAL_USER_ID_INVALID_MSG) String digitalUserId,
 
-            @RequestParam(required = false)
             @Pattern(regexp = Constants.ID_LIST_REGEX, message = Constants.IDS_INVALID_MSG) String externalIds,
 
             @RequestParam(required = false)
