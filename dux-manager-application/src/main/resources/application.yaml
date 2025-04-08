@@ -6,7 +6,7 @@ spring.application:
 # default port for HTTP:   80
 # default port for HTTPS: 443
 server:
-  port: 8081
+  port: 8080
   servlet.context-path: /${spring.application.name}
 
 logging.level:
