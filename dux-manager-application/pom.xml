@@ -46,7 +46,7 @@
 	<!-- ######################################################################### -->
 
 	<properties>
-		<start-class>com.tracktainment.DuxManagerApplication</start-class>
+		<start-class>com.tracktainment.duxmanager.DuxManagerApplication</start-class>
 	</properties>
 
 	<!-- #########################################################################  -->
@@ -58,6 +58,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
