@@ -2,13 +2,29 @@
 
 The Digital User Context (DUX) Manager microservice is part of the Tracktainment application, which is designed to track books, movies, and games consumed by users. This microservice is responsible for managing digital users and their associated assets (e.g., books, games, movies). It uses MongoDB as the primary database and provides REST APIs for external clients.
 
----
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Features](#features)
+- [API Endpoints](#api-endpoints)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Configuration](#configuration)
+  - [Building](#building)
+  - [Running Locally](#running-locally)
+  - [Docker Setup](#docker-setup)
+- [Error Handling](#error-handling)
+- [Validation](#validation)
+- [Development](#development)
+  - [Tech Stack](#tech-stack)
+  - [Project Structure](#project-structure)
+  - [Next Features](#next-features)
+- [Potential Tracktainment Upgrades](#potential-tracktainment-upgrades)
 
 ## Overview
 
 The DUX Manager microservice provides Create, Read and Delete operations for managing digital users and their assets. It adheres to the principles of Clean Architecture, ensuring modularity, scalability, and maintainability. The service uses MongoDB for persistent storage and integrates with other microservices via REST APIs.
-
----
 
 ## Architecture
 
@@ -19,16 +35,12 @@ The project follows a clean architecture with clear separation of concerns:
 - **Data Provider NoSQL Module**: Implementation of persistence layer using MongoDB.
 - **Entry Point REST Module**: REST API controllers and exception handling.
 
----
-
 ## Features
 
 - Create, read and delete operations for digital users and assets.
 - Advanced filtering and search capabilities for assets.
 - Integration with external services for asset management.
 - Comprehensive validation and error handling.
-  
----
 
 ## API Endpoints
 
@@ -42,7 +54,6 @@ The project follows a clean architecture with clear separation of concerns:
 | GET      | `/api/v1/assets`                              | List assets with filters                                         |
 | DELETE   | `/api/v1/assets`                              | Delete an asset                                                  |
 
----
 
 ## Data Model
 
@@ -62,7 +73,6 @@ The project follows a clean architecture with clear separation of concerns:
 - `createdAt`: Record creation timestamp.
 - `updatedAt`: Last update timestamp.
 
----
 
 ## Getting Started
 
@@ -88,7 +98,7 @@ spring.data.mongodb.uri=mongodb://localhost:27017/dux-manager
 mvn clean package
 ```
 
-### Running
+### Running Locally
 
 ```bash
 java -jar dux-manager.jar
@@ -97,19 +107,29 @@ java -jar dux-manager.jar
 ### Docker Setup
 
 The dux-manager application can now be containerized using Docker. To run the application in Docker, follow these steps:
-- Step 1: Build the Docker Image - 
-Run the following command to build the Docker image:
+- Step 1: Clone all repositories containing Tracktainment microservices - Currently these are: book-manager, game-manager and dux-manager. Place them all under the same directory, for example:
+```
+Tracktainment/
+├── book-manager/
+├── dux-manager/
+├── game-manager/
+```
+The docker-compose.yml file needed for the next step will be inside each microservice directory.
+> Note for configuration of application.yaml of the other microservices of Tracktainment, please check the respective repositories.
+  
+- Step 2: Build the Docker Image - Run the following command to build the Docker image for all services (book-manager, game-manager, dux-manager, PostgreSQL and MongoDB):
 ```
 docker-compose up --build
 ```
 
- - Step 2: Start the Containers - 
-Start the containers using the following command:
+ - Step 3: Start the containers using the following command:
 ```
 docker-compose up
 ```
-
-The dux-manager service will be accessible at http://localhost:8081.
+The services will be accessible at the following URLs:
+- book-manager: http://localhost:8081
+- game-manager: http://localhost:8082
+- dux-manager: http://localhost:8080
 
 ## Error Handling
 
