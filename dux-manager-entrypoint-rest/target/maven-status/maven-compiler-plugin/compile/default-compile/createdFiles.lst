@@ -1,0 +1,9 @@
+com\tracktainment\duxmanager\mapper\ExceptionMapperEntryPoint.class
+com\tracktainment\duxmanager\mapper\ExceptionMapperEntryPointImpl.class
+com\tracktainment\duxmanager\exception\ExceptionDto.class
+com\tracktainment\duxmanager\api\AssetRestApi.class
+com\tracktainment\duxmanager\exception\RestExceptionHandler.class
+com\tracktainment\duxmanager\exception\ExceptionDto$ExceptionDtoBuilder.class
+com\tracktainment\duxmanager\api\DigitalUserRestApi.class
+com\tracktainment\duxmanager\controller\DigitalUserRestController.class
+com\tracktainment\duxmanager\controller\AssetRestController.class

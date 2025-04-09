@@ -44,10 +44,11 @@ public class DigitalUserCreate {
         @RequiredArgsConstructor
         public enum IdentityProvider {
 
-            GOOGLE_IDENTITY_PLATFORM("googleIdentityPlatform"),
+            AMAZON_COGNITO("amazonCognito"),
             APPLE_ID("appleId"),
-            MICROSOFT_ENTRA_ID("microsoftEntraId"),
-            AMAZON_COGNITO("amazonCognito");
+            GOOGLE_IDENTITY_PLATFORM("googleIdentityPlatform"),
+            KEY_CLOAK("keyCloak"),
+            MICROSOFT_ENTRA_ID("microsoftEntraId");
 
             private final String value;
         }
