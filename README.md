@@ -105,31 +105,21 @@ java -jar dux-manager.jar
 ```
 
 ### Docker Setup
-
-The dux-manager application can now be containerized using Docker. To run the application in Docker, follow these steps:
-- Step 1: Clone all repositories containing Tracktainment microservices - Currently these are: book-manager, game-manager and dux-manager. Place them all under the same directory, for example:
-```
-Tracktainment/
-├── book-manager/
-├── dux-manager/
-├── game-manager/
-```
-The docker-compose.yml file needed for the next step will be inside each microservice directory.
-> Note for configuration of application.yaml of the other microservices of Tracktainment, please check the respective repositories.
-  
-- Step 2: Build the Docker Image - Run the following command to build the Docker image for all services (book-manager, game-manager, dux-manager, PostgreSQL and MongoDB):
-```
-docker-compose up --build
-```
-
- - Step 3: Start the containers using the following command:
-```
-docker-compose up
-```
-The services will be accessible at the following URLs:
-- book-manager: http://localhost:8081
-- game-manager: http://localhost:8082
-- dux-manager: http://localhost:8080
+ 
+ The dux-manager application can now be containerized using Docker. To run the application in Docker, follow these steps:
+ - Step 1: Build the Docker Image - 
+ Run the following command to build the Docker image:
+ ```
+ docker-compose up --build
+ ```
+ 
+  - Step 2: Start the Containers - 
+ Start the containers using the following command:
+ ```
+ docker-compose up
+ ```
+ 
+ The dux-manager service will be accessible at http://localhost:8081.
 
 ## Error Handling
 
