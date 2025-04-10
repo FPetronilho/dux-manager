@@ -107,13 +107,17 @@ java -jar dux-manager.jar
 ### Docker Setup
  
  The dux-manager application can now be containerized using Docker. To run the application in Docker, follow these steps:
- - Step 1: Build the Docker Image - 
+ - Step 1: Create docker network -  As Dux Manager is designed to work with other microservices, create a docker network so that all microservices can communicate. Run the following command:
+```
+docker network create shared-network
+```
+ - Step 2: Build the Docker Image - 
  Run the following command to build the Docker image:
  ```
  docker-compose up --build
  ```
  
-  - Step 2: Start the Containers - 
+  - Step 3: Start the Containers - 
  Start the containers using the following command:
  ```
  docker-compose up
