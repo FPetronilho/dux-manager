@@ -76,7 +76,8 @@ public class AssetDataProviderNoSql implements AssetDataProvider {
         Query query = new Query(Criteria.where("id").is(userId));
         DigitalUserDocument digitalUserDocument = mongoTemplate.findOne(query, DigitalUserDocument.class);
 
-        if (digitalUserDocument == null || digitalUserDocument.getAssets() == null || digitalUserDocument.getAssets().isEmpty()) {
+        if (digitalUserDocument == null || digitalUserDocument.getAssets() == null ||
+                digitalUserDocument.getAssets().isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -143,7 +144,8 @@ public class AssetDataProviderNoSql implements AssetDataProvider {
                 return false;
             }
 
-            if (input.getTo() != null && asset.getCreatedAt().isAfter(input.getTo().atTime(23, 59, 59, 999999999))) {
+            if (input.getTo() != null && asset.getCreatedAt()
+                    .isAfter(input.getTo().atTime(23, 59, 59, 999999999))) {
                 return false;
             }
         }

@@ -1,7 +1,14 @@
 ###################  Microservice base configuration  ###################
-spring.application:
-  name: dux-manager
-  version: 0.0.1-SNAPSHOT
+spring:
+  application:
+    name: dux-manager
+    version: 0.0.1-SNAPSHOT
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:10000/.well-known/jwks.json
+
 
 # default port for HTTP:   80
 # default port for HTTPS: 443
