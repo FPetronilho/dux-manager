@@ -11,14 +11,14 @@ services:
 
   dux-manager:
     build:
-      context: .
+      context: ../..
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "8080:8080"
+      - "8443:8443"
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/DuxManager
-      SERVER_PORT: 8080
+      SERVER_PORT: 8443
     depends_on:
       - mongodb
     networks:

@@ -7,13 +7,17 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:10000/.well-known/jwks.json
+          jwk-set-uri: ${JWK_SET_URI}
 
-# default port for HTTP:   80
-# default port for HTTPS: 443
 server:
-  port: 8080
+  port: 8443
   servlet.context-path: /${spring.application.name}
+  ssl:
+    enabled: true # enable https
+    key-store: classpath:certificate/dux-manager.p12
+    key-store-password: ${SSL_KEYSTORE_PASSWORD}
+    key-store-type: PKCS12
+    key-alias: dux-manager
 
 logging.level:
   root: INFO
