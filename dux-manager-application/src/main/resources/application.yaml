@@ -10,14 +10,14 @@ spring:
           jwk-set-uri: ${JWK_SET_URI}
 
 server:
-  port: 8443
+  port: ${SERVER_PORT}
   servlet.context-path: /${spring.application.name}
   ssl:
     enabled: true # enable https
-    key-store: classpath:certificate/dux-manager.p12
+    key-store: ${KEY_STORE}
     key-store-password: ${SSL_KEYSTORE_PASSWORD}
     key-store-type: PKCS12
-    key-alias: dux-manager
+    key-alias: ${KEY_ALIAS}
 
 logging.level:
   root: INFO
@@ -26,5 +26,5 @@ logging.level:
 
 ###################  MongoDB configuration  ###################
 spring.data.mongodb:
-  uri: mongodb://localhost:27017/DuxManager
+  uri: ${MONGO_URI}
   auto-index-creation: true

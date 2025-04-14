@@ -4,6 +4,11 @@ service="dux-manager"
 CN="Digital User Context Manager"
 pwd="your-password"
 
+dev_dns="localhost"
+sat_dns="localhost"
+pre_dns="localhost"
+prod_dns="localhost"
+
 rm -f $service.p12
 rm -f $service.p12
 
@@ -18,7 +23,8 @@ keytool -genkeypair \
   -keystore $service.p12 \
   -keypass $pwd \
   -storepass $pwd \
-  -dname "CN=$CN, OU=Software Engineering, O=Portfolio, L=Brussels, ST=Brussels, C=Belgium" \
+  -dname "CN=$service, OU=Software Engineering, O=Portfolio, L=Brussels, ST=Brussels, C=Belgium" \
+  -ext SAN=DNS:$dev_dns,DNS:$sat_dns,DNS:$pre_dns,DNS:$prod_dns
 
 # export the public certificate from the .p12 file
 keytool -exportcert \
