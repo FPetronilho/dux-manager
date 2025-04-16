@@ -1,0 +1,2528 @@
+dux-manager-application:
+pom.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- #########################################################################  -->
+	<!-- #### P A R E N T _ P R O J E C T ######################################## -->
+	<!-- ######################################################################### -->
+
+	<parent>
+		<groupId>com.tracktainment</groupId>
+		<artifactId>dux-manager</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ D E S C R I P T I O N ############################## -->
+	<!-- ######################################################################### -->
+
+	<artifactId>dux-manager-application</artifactId>
+	<name>DUX Manager :: Application</name>
+	<description>Digital User Context Manager Application Module</description>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ D E P E N D E N C I E S ############################ -->
+	<!-- ######################################################################### -->
+
+	<dependencies>
+		<dependency>
+			<groupId>com.tracktainment</groupId>
+			<artifactId>dux-manager-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.tracktainment</groupId>
+			<artifactId>dux-manager-entrypoint-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.tracktainment</groupId>
+			<artifactId>dux-manager-dataprovider-no-sql</artifactId>
+		</dependency>
+	</dependencies>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ P R O P E R T I E S ################################ -->
+	<!-- ######################################################################### -->
+
+	<properties>
+		<start-class>com.tracktainment.duxmanager.DuxManagerApplication</start-class>
+	</properties>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ B U I L D ########################################## -->
+	<!-- ######################################################################### -->
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>${lombok-mapstruct-binding.version}</version>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+-----------------------
+DuxManagerApplication.java:
+package com.tracktainment.duxmanager;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
+
+@SpringBootApplication(scanBasePackages = {"com.tracktainment.duxmanager"})
+@EnableMongoAuditing
+public class DuxManagerApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DuxManagerApplication.class, args);
+	}
+
+}
+-----------------------
+application-local.yaml:
+###################  Microservice base configuration  ###################
+spring.application.environment: local
+
+###################  MongoDB configuration  ###################
+spring.data.mongodb.uri: mongodb://localhost:27017/DuxManager-----------------------
+application.yaml:
+###################  Microservice base configuration  ###################
+spring:
+  application:
+    name: dux-manager
+    version: 0.0.1-SNAPSHOT
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${JWK_SET_URI}
+
+server:
+  port: ${SERVER_PORT}
+  servlet.context-path: /${spring.application.name}
+  ssl:
+    enabled: true # enable https
+    key-store: ${KEY_STORE}
+    key-store-password: ${SSL_KEYSTORE_PASSWORD}
+    key-store-type: PKCS12
+    key-alias: ${KEY_ALIAS}
+
+logging.level:
+  root: INFO
+  org.springframework: INFO
+  com.portfolio: INFO
+
+###################  MongoDB configuration  ###################
+spring.data.mongodb:
+  uri: ${MONGO_URI}
+  auto-index-creation: true
+-----------------------
+---------------
+------------
+-------------------
+dux-manager-core:
+pom.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- #########################################################################  -->
+	<!-- #### P A R E N T _ P R O J E C T ######################################## -->
+	<!-- ######################################################################### -->
+
+	<parent>
+		<groupId>com.tracktainment</groupId>
+		<artifactId>dux-manager</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ D E S C R I P T I O N ############################## -->
+	<!-- ######################################################################### -->
+
+	<artifactId>dux-manager-core</artifactId>
+	<name>DUX Manager :: Core</name>
+	<description>Digital User Context Manager Core Module</description>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ D E P E N D E N C I E S ############################ -->
+	<!-- ######################################################################### -->
+
+	<dependencies>
+	</dependencies>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ P R O P E R T I E S ################################ -->
+	<!-- ######################################################################### -->
+
+	<properties>
+	</properties>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ B U I L D ########################################## -->
+	<!-- ######################################################################### -->
+
+	<build>
+	</build>
+
+</project>
+-----------------------
+AssetDataProvider.java:
+package com.tracktainment.duxmanager.dataprovider;
+
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.dto.AssetCreate;
+import com.tracktainment.duxmanager.usecases.asset.ListAssetsByCriteriaUseCase;
+
+import java.util.List;
+
+public interface AssetDataProvider {
+
+    Asset create(String digitalUserId, AssetCreate assetCreate);
+
+    Asset findByExternalId(String digitalUserId, String externalId);
+
+    List<Asset> listByCriteria(ListAssetsByCriteriaUseCase.Input input);
+
+    void delete(String digitalUserId, String externalId);
+}
+-----------------------
+DigitalUserDataProvider.java:
+package com.tracktainment.duxmanager.dataprovider;
+
+import com.tracktainment.duxmanager.domain.DigitalUser;
+import com.tracktainment.duxmanager.dto.DigitalUserCreate;
+
+public interface DigitalUserDataProvider {
+
+    DigitalUser create(DigitalUserCreate digitalUserCreate);
+
+    DigitalUser findById(String id);
+
+    DigitalUser findBySubAndIdPAndTenant(
+            String subject,
+            DigitalUser.IdentityProviderInformation.IdentityProvider identityProvider,
+            String tenantId
+    );
+
+    void delete(String id);
+}
+-----------------------
+Asset.java:
+package com.tracktainment.duxmanager.domain;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Asset extends BaseObject {
+
+    private String externalId; // ID from the source system (i.e. book-manager, etc.)
+    private String type; // i.e. book, game, etc.
+    private PermissionPolicy permissionPolicy;
+    private ArtifactInformation artifactInformation;
+
+    @ToString
+    @Getter
+    @RequiredArgsConstructor
+    public enum PermissionPolicy {
+
+        OWNER("owner"),
+        VIEWER("viewer");
+
+        private final String value;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Data
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class ArtifactInformation {
+
+        private String groupId;
+        private String artifactId;
+        private String version;
+    }
+}
+-----------------------
+BaseObject.java:
+package com.tracktainment.duxmanager.domain;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@SuperBuilder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class BaseObject {
+
+    private String id;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+-----------------------
+DigitalUser.java:
+package com.tracktainment.duxmanager.domain;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class DigitalUser extends BaseObject {
+
+    private IdentityProviderInformation identityProviderInformation;
+    private PersonalInformation personalInformation;
+    private List<ContactMedium> contactMediumList;
+    private List<Asset> assets;
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class IdentityProviderInformation {
+
+        private String subject;
+        private IdentityProvider identityProvider;
+        private String tenantId;
+
+        @ToString
+        @Getter
+        @RequiredArgsConstructor
+        public enum IdentityProvider {
+
+            AMAZON_COGNITO("amazonCognito"),
+            APPLE_ID("appleId"),
+            GOOGLE_IDENTITY_PLATFORM("googleIdentityPlatform"),
+            KEY_CLOAK("keyCloak"),
+            MICROSOFT_ENTRA_ID("microsoftEntraId");
+
+            private final String value;
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class PersonalInformation {
+
+        private String fullName;
+        private String firstName;
+        private String middleName;
+        private String lastName;
+        private String nickname;
+        private LocalDate birthDate;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class ContactMedium {
+
+        private boolean preferred;
+        private Type type;
+        private Characteristic characteristic;
+        private LocalDateTime expiresAt;
+
+
+        @ToString
+        @Getter
+        @RequiredArgsConstructor
+        public enum Type {
+
+            PHONE("phone"),
+            EMAIL("email"),
+            GEOGRAPHIC_ADDRESS("geographicAddress");
+
+            private final String value;
+        }
+
+        @AllArgsConstructor
+        @NoArgsConstructor
+        @Data
+        @Builder
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        public static class Characteristic {
+
+            // Phone
+            private String countryCode;
+            private String phoneNumber;
+
+            // Email
+            private String emailAddress;
+
+            // Geographic address
+            private String country;
+            private String city;
+            private String stateOrProvince;
+            private String postalCode;
+            private String street1;
+            private String street2;
+        }
+    }
+}
+-----------------------
+AssetCreate.java:
+package com.tracktainment.duxmanager.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.util.Constants;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AssetCreate {
+
+    @NotNull(message = Constants.ASSET_EXTERNAL_ID_MANDATORY_MSG)
+    @Pattern(regexp = Constants.ID_REGEX, message = Constants.EXTERNAL_ID_INVALID_MSG)
+    private String externalId;
+
+    @NotNull(message = Constants.ASSET_TYPE_MANDATORY_MSG)
+    @Pattern(regexp = Constants.TYPE_REGEX, message = Constants.TYPE_INVALID_MSG)
+    private String type;
+
+    @NotNull(message = Constants.ASSET_PERMISSION_POLICY_MANDATORY_MSG)
+    private Asset.PermissionPolicy permissionPolicy;
+
+    @NotNull(message = Constants.ASSET_ARTIFACT_INFO_MANDATORY_MSG)
+    private Asset.ArtifactInformation artifactInformation;
+
+    @ToString
+    @Getter
+    @RequiredArgsConstructor
+    public enum PermissionPolicy {
+
+        OWNER("owner"),
+        VIEWER("viewer");
+
+        private final String value;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Data
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class ArtifactInformation {
+
+        @NotNull(message = Constants.ASSET_GROUP_ID_MANDATORY_MSG)
+        @Pattern(regexp = Constants.GROUP_ID_REGEX, message = Constants.GROUP_ID_INVALID_MSG)
+        private String groupId;
+
+        @NotNull(message = Constants.ASSET_ARTIFACT_ID_MANDATORY_MSG)
+        @Pattern(regexp = Constants.ARTIFACT_ID_REGEX, message = Constants.ARTIFACT_ID_INVALID_MSG)
+        private String artifactId;
+
+        @NotNull(message = Constants.ASSET_VERSION_MANDATORY_MSG)
+        @Pattern(regexp = Constants.VERSION_REGEX, message = Constants.VERSION_INVALID_MSG)
+        private String version;
+    }
+}
+-----------------------
+DigitalUserCreate.java:
+package com.tracktainment.duxmanager.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tracktainment.duxmanager.util.Constants;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class DigitalUserCreate {
+
+    private IdentityProviderInformation identityProviderInformation;
+    private PersonalInformation personalInformation;
+    private List<ContactMedium> contactMediumList;
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class IdentityProviderInformation {
+
+        @NotNull(message = Constants.USER_SUBJECT_MANDATORY_MSG)
+        @Pattern(regexp = Constants.SUB_REGEX, message = Constants.SUB_INVALID_MSG)
+        private String subject;
+
+        private IdentityProvider identityProvider;
+
+        @NotNull(message = Constants.USER_TENANT_ID_MANDATORY_MSG)
+        @Pattern(regexp = Constants.TENANT_ID_REGEX, message = Constants.TENANT_ID_INVALID_MSG)
+        private String tenantId;
+
+        @ToString
+        @Getter
+        @RequiredArgsConstructor
+        public enum IdentityProvider {
+
+            AMAZON_COGNITO("amazonCognito"),
+            APPLE_ID("appleId"),
+            GOOGLE_IDENTITY_PLATFORM("googleIdentityPlatform"),
+            KEY_CLOAK("keyCloak"),
+            MICROSOFT_ENTRA_ID("microsoftEntraId");
+
+            private final String value;
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class PersonalInformation {
+
+        @Pattern(regexp = Constants.FULL_NAME_REGEX, message = Constants.FULL_NAME_INVALID_MSG)
+        private String fullName;
+
+        @Pattern(regexp = Constants.SINGLE_NAME_REGEX, message = Constants.FIRST_NAME_INVALID_MSG)
+        private String firstName;
+
+        @Pattern(regexp = Constants.SINGLE_NAME_REGEX, message = Constants.MIDDLE_NAME_INVALID_MSG)
+        private String middleName;
+
+        @Pattern(regexp = Constants.SINGLE_NAME_REGEX, message = Constants.FULL_NAME_INVALID_MSG)
+        private String lastName;
+
+        @Pattern(regexp = Constants.SINGLE_NAME_REGEX, message = Constants.NICKNAME_INVALID_MSG)
+        private String nickname;
+
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        private LocalDate birthDate;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class ContactMedium {
+
+        private boolean preferred;
+        private Type type;
+        private Characteristic characteristic;
+
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        private LocalDateTime expiresAt;
+
+
+        @ToString
+        @Getter
+        @RequiredArgsConstructor
+        public enum Type {
+
+            PHONE("phone"),
+            EMAIL("email"),
+            GEOGRAPHIC_ADDRESS("geographicAddress");
+
+            private final String value;
+        }
+
+        @AllArgsConstructor
+        @NoArgsConstructor
+        @Data
+        @Builder
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        public static class Characteristic {
+
+            // Phone
+            @Pattern(regexp = Constants.COUNTRY_CODE_REGEX, message = Constants.COUNTRY_CODE_INVALID_MSG)
+            private String countryCode;
+
+            @Pattern(regexp = Constants.PHONE_NUMBER_REGEX, message = Constants.PHONE_NUMBER_INVALID_MSG)
+            private String phoneNumber;
+
+            // Email
+            @Pattern(regexp = Constants.EMAIL_REGEX, message = Constants.EMAIL_INVALID_MSG)
+            private String emailAddress;
+
+            // Geographic address
+            @Pattern(regexp = Constants.GENERIC_ADDRESS_REGEX, message = Constants.COUNTRY_INVALID_MSG)
+            private String country;
+
+            @Pattern(regexp = Constants.GENERIC_ADDRESS_REGEX, message = Constants.CITY_INVALID_MSG)
+            private String city;
+
+            @Pattern(regexp = Constants.GENERIC_ADDRESS_REGEX, message = Constants.STATE_PROVINCE_INVALID_MSG)
+            private String stateOrProvince;
+
+            @Pattern(regexp = Constants.POSTAL_CODE_REGEX, message = Constants.POSTAL_CODE_INVALID_MSG)
+            private String postalCode;
+
+            @Pattern(regexp = Constants.GENERIC_ADDRESS_REGEX, message = Constants.STREET_INVALID_MSG)
+            private String street1;
+
+            @Pattern(regexp = Constants.GENERIC_ADDRESS_REGEX, message = Constants.STREET_INVALID_MSG)
+            private String street2;
+        }
+    }
+}
+-----------------------
+AuthenticationFailedException.java:
+package com.tracktainment.duxmanager.exception;
+
+public class AuthenticationFailedException extends BusinessException {
+
+    public AuthenticationFailedException(String message) {
+        super(
+                ExceptionCode.CLIENT_NOT_AUTHENTICATED,
+                message
+        );
+    }
+}
+-----------------------
+AuthorizationFailedException.java:
+package com.tracktainment.duxmanager.exception;
+
+public class AuthorizationFailedException extends BusinessException {
+
+    public AuthorizationFailedException(String message) {
+        super(
+                ExceptionCode.CLIENT_NOT_AUTHORIZED,
+                message
+        );
+    }
+}
+-----------------------
+BusinessException.java:
+package com.tracktainment.duxmanager.exception;
+
+import lombok.Getter;
+
+@Getter
+public class BusinessException extends RuntimeException {
+
+    private final String code;
+    private final int httpStatusCode;
+    private final String reason;
+    private final String message;
+
+    public BusinessException(ExceptionCode exceptionCode, String message) {
+        super(message);
+        this.code = exceptionCode.getCode();
+        this.httpStatusCode = exceptionCode.getHttpStatusCode();
+        this.reason = exceptionCode.getReason();
+        this.message = message;
+    }
+
+    public BusinessException(ExceptionCode exceptionCode) {
+        super();
+        this.code = exceptionCode.getCode();
+        this.httpStatusCode = exceptionCode.getHttpStatusCode();
+        this.reason = exceptionCode.getReason();
+        this.message = null;
+    }
+}
+-----------------------
+ExceptionCode.java:
+package com.tracktainment.duxmanager.exception;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import org.springframework.http.HttpStatus;
+
+@ToString
+@Getter
+@RequiredArgsConstructor
+public enum ExceptionCode {
+
+    INTERNAL_SERVER_ERROR("E-001", HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error."),
+    RESOURCE_NOT_FOUND("E-002", HttpStatus.NOT_FOUND.value(), "Resource not found."),
+    RESOURCE_ALREADY_EXISTS("E-003", HttpStatus.CONFLICT.value(), "Resource already exists."),
+    CLIENT_NOT_AUTHENTICATED("E-004", HttpStatus.UNAUTHORIZED.value(), "Client not authenticated."),
+    CLIENT_NOT_AUTHORIZED("E-005", HttpStatus.FORBIDDEN.value(), "Client not authorized."),
+    CONFIGURATION_ERROR("E-006", HttpStatus.INTERNAL_SERVER_ERROR.value(), "Configuration error."),
+    PARAMETER_VALIDATION_ERROR("E-007", HttpStatus.BAD_REQUEST.value(), "Parameter validation error.");
+
+    private final String code;
+    private final int httpStatusCode;
+    private final String reason;
+}
+-----------------------
+InternalServerErrorException.java:
+package com.tracktainment.duxmanager.exception;
+
+public class InternalServerErrorException extends BusinessException {
+
+    public InternalServerErrorException(String message) {
+        super(ExceptionCode.INTERNAL_SERVER_ERROR, message);
+    }
+}
+-----------------------
+ParameterValidationErrorException.java:
+package com.tracktainment.duxmanager.exception;
+
+public class ParameterValidationErrorException extends BusinessException {
+
+    public ParameterValidationErrorException(String message) {
+        super(ExceptionCode.PARAMETER_VALIDATION_ERROR, message);
+    }
+}
+-----------------------
+ResourceAlreadyExistsException.java:
+package com.tracktainment.duxmanager.exception;
+
+public class ResourceAlreadyExistsException extends BusinessException {
+
+    public static final String ERROR_MESSAGE = "%s %s already exists.";
+
+    public ResourceAlreadyExistsException(Class<?> clazz, String resourceAttribute) {
+        super(
+                ExceptionCode.RESOURCE_ALREADY_EXISTS,
+                String.format(ERROR_MESSAGE, clazz.getSimpleName(), resourceAttribute)
+        );
+    }
+}
+-----------------------
+ResourceNotFoundException.java:
+package com.tracktainment.duxmanager.exception;
+
+public class ResourceNotFoundException extends BusinessException {
+
+    public static final String ERROR_MESSAGE = "%s %s not found.";
+
+    public ResourceNotFoundException(Class<?> clazz, String resourceAttribute) {
+        super(
+                ExceptionCode.RESOURCE_NOT_FOUND,
+                String.format(ERROR_MESSAGE, clazz.getSimpleName(), resourceAttribute)
+        );
+    }
+}
+-----------------------
+DigitalUserSecurityContext.java:
+package com.tracktainment.duxmanager.security.context;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+public class DigitalUserSecurityContext {
+
+    private String id;
+    private String subject;
+}
+-----------------------
+SecurityUtil.java:
+package com.tracktainment.duxmanager.security.util;
+
+import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class SecurityUtil {
+
+    public DigitalUserSecurityContext getDigitalUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof Jwt jwt)) {
+            throw new IllegalStateException("JWT not found in security context.");
+        }
+
+        DigitalUserSecurityContext digitalUserSecurityContext = new DigitalUserSecurityContext();
+        digitalUserSecurityContext.setId(jwt.getSubject());
+        return digitalUserSecurityContext;
+    }
+}
+-----------------------
+CreateAssetUseCase.java:
+package com.tracktainment.duxmanager.usecases.asset;
+
+import com.tracktainment.duxmanager.dataprovider.AssetDataProvider;
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.dto.AssetCreate;
+import com.tracktainment.duxmanager.exception.AuthenticationFailedException;
+import com.tracktainment.duxmanager.exception.ResourceAlreadyExistsException;
+import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
+import com.tracktainment.duxmanager.security.util.SecurityUtil;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class CreateAssetUseCase {
+
+    private final AssetDataProvider assetDataProvider;
+    private final SecurityUtil securityUtil;
+
+    public Output execute(Input input) {
+        // Check if digital user is authenticated
+        DigitalUserSecurityContext digitalUserSecurityContext = securityUtil.getDigitalUser();
+        if (!digitalUserSecurityContext.getId().equals(input.getDigitalUserId())) {
+            throw new AuthenticationFailedException("Authentication Failed: User ID does not match ID from JWT.");
+        }
+
+        return Output.builder()
+                .asset(assetDataProvider.create(
+                        input.getDigitalUserId(),
+                        input.getAssetCreate()
+                ))
+                .build();
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Input {
+
+        private String digitalUserId;
+        private AssetCreate assetCreate;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Output {
+
+        private Asset asset;
+    }
+}
+-----------------------
+DeleteAssetUseCase.java:
+package com.tracktainment.duxmanager.usecases.asset;
+
+import com.tracktainment.duxmanager.dataprovider.AssetDataProvider;
+import com.tracktainment.duxmanager.exception.AuthenticationFailedException;
+import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
+import com.tracktainment.duxmanager.security.util.SecurityUtil;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class DeleteAssetUseCase {
+
+    private final AssetDataProvider assetDataProvider;
+    private final SecurityUtil securityUtil;
+
+    public void execute(Input input) {
+        // Check if digital user is authenticated
+        DigitalUserSecurityContext digitalUserSecurityContext = securityUtil.getDigitalUser();
+        if (!digitalUserSecurityContext.getId().equals(input.getDigitalUserId())) {
+            throw new AuthenticationFailedException("Authentication Failed: User ID does not match ID from JWT.");
+        }
+        assetDataProvider.delete(
+                input.getDigitalUserId(),
+                input.getExternalId()
+        );
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Input {
+
+        private String digitalUserId;
+        private String externalId;
+    }
+}
+-----------------------
+FindAssetByExternalIdUseCase.java:
+package com.tracktainment.duxmanager.usecases.asset;
+
+import com.tracktainment.duxmanager.dataprovider.AssetDataProvider;
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.exception.AuthenticationFailedException;
+import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
+import com.tracktainment.duxmanager.security.util.SecurityUtil;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class FindAssetByExternalIdUseCase {
+
+    private final AssetDataProvider assetDataProvider;
+    private final SecurityUtil securityUtil;
+
+    public Output execute(Input input) {
+        // Check if digital user is authenticated
+        DigitalUserSecurityContext digitalUserSecurityContext = securityUtil.getDigitalUser();
+        if (!digitalUserSecurityContext.getId().equals(input.getDigitalUserId())) {
+            throw new AuthenticationFailedException("Authentication Failed: User ID does not match ID from JWT.");
+        }
+
+        return Output.builder()
+                .asset(assetDataProvider.findByExternalId(
+                        input.getDigitalUserId(),
+                        input.getExternalId()
+                ))
+                .build();
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Input {
+
+        private String digitalUserId;
+        private String externalId;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Output {
+
+        private Asset asset;
+    }
+}
+-----------------------
+ListAssetsByCriteriaUseCase.java:
+package com.tracktainment.duxmanager.usecases.asset;
+
+import com.tracktainment.duxmanager.dataprovider.AssetDataProvider;
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.exception.AuthenticationFailedException;
+import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
+import com.tracktainment.duxmanager.security.util.SecurityUtil;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class ListAssetsByCriteriaUseCase {
+
+    private final AssetDataProvider assetDataProvider;
+    private final SecurityUtil securityUtil;
+
+    public Output execute(Input input) {
+        // Check if digital user is authenticated
+        DigitalUserSecurityContext digitalUserSecurityContext = securityUtil.getDigitalUser();
+        if (!digitalUserSecurityContext.getId().equals(input.getDigitalUserId())) {
+            throw new AuthenticationFailedException("Authentication Failed: User ID does not match ID from JWT.");
+        }
+
+        return Output.builder()
+                .assets(assetDataProvider.listByCriteria(input))
+                .build();
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Input {
+
+        private Integer offset;
+        private Integer limit;
+        private String digitalUserId;
+        private String externalIds;
+        private String groupId;
+        private String artifactId;
+        private String type;
+        private LocalDate createdAt;
+        private LocalDate from;
+        private LocalDate to;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Output {
+
+        private List<Asset> assets;
+    }
+}
+-----------------------
+CreateDigitalUserUseCase.java:
+package com.tracktainment.duxmanager.usecases.digitaluser;
+
+import com.tracktainment.duxmanager.dataprovider.DigitalUserDataProvider;
+import com.tracktainment.duxmanager.domain.DigitalUser;
+import com.tracktainment.duxmanager.dto.DigitalUserCreate;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class CreateDigitalUserUseCase {
+
+    private final DigitalUserDataProvider digitalUserDataProvider;
+
+    public Output execute(Input input) {
+        return Output.builder()
+                .digitalUser(digitalUserDataProvider.create(input.getDigitalUserCreate()))
+                .build();
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Input {
+
+        private DigitalUserCreate digitalUserCreate;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Output {
+
+        private DigitalUser digitalUser;
+    }
+}
+-----------------------
+DeleteDigitalUserUseCase.java:
+package com.tracktainment.duxmanager.usecases.digitaluser;
+
+import com.tracktainment.duxmanager.dataprovider.DigitalUserDataProvider;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class DeleteDigitalUserUseCase {
+
+    private final DigitalUserDataProvider digitalUserDataProvider;
+
+    public void execute(Input input) {
+        digitalUserDataProvider.delete(input.getDigitalUserId());
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Input {
+
+        private String digitalUserId;
+    }
+}
+-----------------------
+FindDigitalUserByIdUseCase.java:
+package com.tracktainment.duxmanager.usecases.digitaluser;
+
+import com.tracktainment.duxmanager.dataprovider.DigitalUserDataProvider;
+import com.tracktainment.duxmanager.domain.DigitalUser;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class FindDigitalUserByIdUseCase {
+
+    private final DigitalUserDataProvider digitalUserDataProvider;
+
+    public Output execute(Input input) {
+        return Output.builder()
+                .digitalUser(digitalUserDataProvider.findById(input.getDigitalUserId()))
+                .build();
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Input {
+
+        private String digitalUserId;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Output {
+
+        private DigitalUser digitalUser;
+    }
+}
+-----------------------
+FindDigitalUserBySubAndIdPAndTenantUseCase.java:
+package com.tracktainment.duxmanager.usecases.digitaluser;
+
+import com.tracktainment.duxmanager.dataprovider.DigitalUserDataProvider;
+import com.tracktainment.duxmanager.domain.DigitalUser;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class FindDigitalUserBySubAndIdPAndTenantUseCase {
+
+    private final DigitalUserDataProvider digitalUserDataProvider;
+
+    public Output execute(Input input) {
+        return Output.builder()
+                .digitalUser(digitalUserDataProvider.findBySubAndIdPAndTenant(
+                        input.getSubject(),
+                        input.getIdentityProvider(),
+                        input.getTenantId()
+                ))
+                .build();
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Input {
+
+        private String subject;
+        private DigitalUser.IdentityProviderInformation.IdentityProvider identityProvider;
+        private String tenantId;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @Builder
+    public static class Output {
+
+        private DigitalUser digitalUser;
+    }
+}
+-----------------------
+Constants.java:
+package com.tracktainment.duxmanager.util;
+
+public class Constants {
+
+    public Constants() {
+        throw new IllegalStateException("Util class cannot be instantiated.");
+    }
+
+    // Default values
+    public static final String DEFAULT_OFFSET = "0";
+    public static final String DEFAULT_LIMIT = "10";
+    public static final int MIN_OFFSET = 0;
+    public static final int MIN_LIMIT = 1;
+    public static final int MAX_LIMIT = 100;
+
+
+    // Required fields validation
+    public static final String USER_IDP_INFO_MANDATORY_MSG = "'idPInfo' is mandatory.";
+    public static final String USER_PERSONAL_INFO_MANDATORY_MSG = "'personalInfo' is mandatory.";
+    public static final String USER_CONTACT_MEDIUM_MANDATORY_MSG = "'contactMediumList' is mandatory.";
+    public static final String USER_SUBJECT_MANDATORY_MSG = "'subject' is mandatory.";
+    public static final String USER_TENANT_ID_MANDATORY_MSG = "'tenantId' is mandatory.";
+    public static final String ASSET_EXTERNAL_ID_MANDATORY_MSG = "'externalId' is mandatory.";
+    public static final String ASSET_TYPE_MANDATORY_MSG = "'type' is mandatory.";
+    public static final String ASSET_ARTIFACT_INFO_MANDATORY_MSG = "'artifactInfo' is mandatory.";
+    public static final String ASSET_PERMISSION_POLICY_MANDATORY_MSG = "'permissionPolicy' is mandatory.";
+    public static final String ASSET_GROUP_ID_MANDATORY_MSG = "'groupId' is mandatory.";
+    public static final String ASSET_ARTIFACT_ID_MANDATORY_MSG = "'artifactId' is mandatory.";
+    public static final String ASSET_VERSION_MANDATORY_MSG = "'version' is mandatory.";
+
+
+    // Regex
+    public static final String GROUP_ID_REGEX = "[ \\wÀ-ú\\.:,;\\-\\[\\]()]{1,50}";
+    public static final String ARTIFACT_ID_REGEX = "[ \\wÀ-ú\\.:,;\\-\\[\\]()]{1,50}";
+    public static final String VERSION_REGEX = "[ \\wÀ-ú\\.:,;\\-\\[\\]()]{1,50}";
+    public static final String TYPE_REGEX = "[ \\wÀ-ú\\.:,;\\-\\[\\]()]{1,30}";
+    public static final String ID_REGEX = "[a-fA-F\\d\\-]{36}";
+    public static final String ID_LIST_REGEX =
+            "^([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})(," +
+                    "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){0," +
+                    (MAX_LIMIT-1) + "}$";
+    public static final String SUB_REGEX = "^[a-zA-Z0-9_\\-\\.]+$";
+    public static final String TENANT_ID_REGEX = "^[a-zA-Z0-9_\\-\\.]+$";
+    public static final String FULL_NAME_REGEX = "^[A-Za-z]+(?:['-]?[A-Za-z]+)*(?: [A-Za-z]+(?:['-]?[A-Za-z]+)*)+$";
+    public static final String SINGLE_NAME_REGEX = "^[A-Za-z]+(?:['-][A-Za-z]+)*$";
+    public static final String COUNTRY_CODE_REGEX = "^\\+[1-9]\\d{0,3}$";
+    public static final String PHONE_NUMBER_REGEX = "^(\\(?\\d{3}\\)?[-.\\s]?)?\\d{3}[-.\\s]?\\d{4}$";
+    public static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    public static final String GENERIC_ADDRESS_REGEX = "^[a-zA-Z0-9#.,\\-/\\s]+$";
+    public static final String POSTAL_CODE_REGEX = "^[a-zA-Z0-9\\s-]{3,10}$";
+
+
+    // Fields validation
+    public static final String ID_INVALID_MSG = "'id' must match: " + ID_REGEX + ".";
+    public static final String OFFSET_INVALID_MSG = "'offset' must be positive";
+    public static final String LIMIT_INVALID_MSG = "'limit' must be in the range [" + MIN_LIMIT + ", " + MAX_LIMIT + "]";
+    public static final String GROUP_ID_INVALID_MSG = "'groupId' must match: " + GROUP_ID_REGEX + ".";
+    public static final String ARTIFACT_ID_INVALID_MSG = "'artifactId' must match: " + ARTIFACT_ID_REGEX + ".";
+    public static final String VERSION_INVALID_MSG = "'version' must match: " + VERSION_REGEX + ".";
+    public static final String TYPE_INVALID_MSG = "'type' must match: " + TYPE_REGEX + ".";
+    public static final String DIGITAL_USER_ID_INVALID_MSG = "'digitalUserId' must match: " + ID_REGEX + ".";
+    public static final String IDS_INVALID_MSG = "'ids' must match: " + ID_LIST_REGEX + ".";
+    public static final String SUB_INVALID_MSG = "'sub' must match: " + SUB_REGEX + ".";
+    public static final String EXTERNAL_ID_INVALID_MSG = "'externalId' must match: " + ID_REGEX + ".";
+    public static final String TENANT_ID_INVALID_MSG = "'tenantId' must match: " + TENANT_ID_REGEX + ".";
+    public static final String FULL_NAME_INVALID_MSG = "'fullName' must match: " + FULL_NAME_REGEX + ".";
+    public static final String FIRST_NAME_INVALID_MSG = "'firstName' must match: " + SINGLE_NAME_REGEX + ".";
+    public static final String NICKNAME_INVALID_MSG = "'nickName' must match: " + SINGLE_NAME_REGEX + ".";
+    public static final String MIDDLE_NAME_INVALID_MSG = "'middleName' must match: " + SINGLE_NAME_REGEX + ".";
+    public static final String FAMILY_NAME_INVALID_MSG = "'familyName' must match: " + SINGLE_NAME_REGEX + ".";
+    public static final String COUNTRY_CODE_INVALID_MSG = "'countryCode' must match: " + COUNTRY_CODE_REGEX + ".";
+    public static final String PHONE_NUMBER_INVALID_MSG = "'phoneNumber' must match: " + PHONE_NUMBER_REGEX + ".";
+    public static final String EMAIL_INVALID_MSG = "'email' must match: " + EMAIL_REGEX + ".";
+    public static final String COUNTRY_INVALID_MSG = "'country' must match: " + GENERIC_ADDRESS_REGEX + ".";
+    public static final String CITY_INVALID_MSG = "'city' must match: " + GENERIC_ADDRESS_REGEX + ".";
+    public static final String STATE_PROVINCE_INVALID_MSG = "'stateOrProvince' must match: " + GENERIC_ADDRESS_REGEX + ".";
+    public static final String STREET_INVALID_MSG = "'street' must match: " + GENERIC_ADDRESS_REGEX + ".";
+    public static final String POSTAL_CODE_INVALID_MSG = "'postalCode' must match: " + POSTAL_CODE_REGEX + ".";
+    public static final String BOOLEAN_INVALID_MSG = "'preferred' must be either 'true' or 'false'.";
+}
+-----------------------
+---------------
+------------
+-------------------
+dux-manager-dataprovider-no-sql:
+pom.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- #########################################################################  -->
+	<!-- #### P A R E N T _ P R O J E C T ######################################## -->
+	<!-- ######################################################################### -->
+
+	<parent>
+		<groupId>com.tracktainment</groupId>
+		<artifactId>dux-manager</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ D E S C R I P T I O N ############################## -->
+	<!-- ######################################################################### -->
+
+	<artifactId>dux-manager-dataprovider-no-sql</artifactId>
+	<name>DUX Manager :: Data Provider No SQL</name>
+	<description>Digital User Context Manager Data Provider No SQL Module</description>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ D E P E N D E N C I E S ############################ -->
+	<!-- ######################################################################### -->
+
+	<dependencies>
+		<!-- internal dependencies -->
+		<dependency>
+			<groupId>com.tracktainment</groupId>
+			<artifactId>dux-manager-core</artifactId>
+		</dependency>
+
+		<!-- external dependencies -->
+		<!-- Mongo DB -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			<version>${spring-boot-starter-parent.version}</version>
+		</dependency>
+	</dependencies>
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ P R O P E R T I E S ################################ -->
+	<!-- ######################################################################### -->
+
+	<properties>
+	</properties>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ B U I L D ########################################## -->
+	<!-- ######################################################################### -->
+
+	<build>
+	</build>
+
+</project>
+-----------------------
+AssetDataProviderNoSql.java:
+package com.tracktainment.duxmanager.dataprovider;
+
+import com.mongodb.BasicDBObject;
+import com.tracktainment.duxmanager.document.DigitalUserDocument;
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.dto.AssetCreate;
+import com.tracktainment.duxmanager.exception.ParameterValidationErrorException;
+import com.tracktainment.duxmanager.exception.ResourceAlreadyExistsException;
+import com.tracktainment.duxmanager.exception.ResourceNotFoundException;
+import com.tracktainment.duxmanager.mapper.AssetMapperDataProvider;
+import com.tracktainment.duxmanager.usecases.asset.ListAssetsByCriteriaUseCase;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class AssetDataProviderNoSql implements AssetDataProvider {
+
+    private final AssetMapperDataProvider mapper;
+    private final MongoTemplate mongoTemplate;
+    private final DigitalUserDataProviderNoSql digitalUserDataProviderNoSql;
+
+    @Override
+    @Transactional
+    public Asset create(String digitalUserId, AssetCreate assetCreate) {
+        if (existsByExternalId(digitalUserId, assetCreate.getExternalId())) {
+            throw new ResourceAlreadyExistsException(Asset.class, assetCreate.getExternalId());
+        }
+
+        DigitalUserDocument digitalUserDocument = digitalUserDataProviderNoSql.findDigitalUserDocumentById(digitalUserId);
+        Asset asset = mapper.toAsset(assetCreate);
+        asset.setCreatedAt(LocalDateTime.now());
+        digitalUserDocument.getAssets().add(asset);
+        mongoTemplate.save(digitalUserDocument);
+        return asset;
+
+    }
+
+    @Override
+    public Asset findByExternalId(String digitalUserId, String externalId) {
+        Query query = new Query()
+                .addCriteria(Criteria.where("id").is(digitalUserId))
+                .addCriteria(Criteria.where("assets.externalId").is(externalId));
+
+        query.fields().include("assets.$"); // Projects only the matching asset in a list with 1 element
+        DigitalUserDocument digitalUserDocument = mongoTemplate.findOne(query, DigitalUserDocument.class);
+
+        if (digitalUserDocument == null || digitalUserDocument.getAssets().isEmpty()) {
+            throw new ResourceNotFoundException(Asset.class, externalId);
+        }
+
+        return digitalUserDocument.getAssets().get(0);
+    }
+
+    @Override
+    public List<Asset> listByCriteria(ListAssetsByCriteriaUseCase.Input input) {
+        if (input.getDigitalUserId() == null) {
+            throw new ParameterValidationErrorException("digitalUserId cannot be empty");
+        }
+
+        String userId = input.getDigitalUserId();
+        if (!digitalUserDataProviderNoSql.existsById(userId)) {
+            throw new ResourceNotFoundException(DigitalUserDocument.class, userId);
+        }
+
+        Query query = new Query(Criteria.where("id").is(userId));
+        DigitalUserDocument digitalUserDocument = mongoTemplate.findOne(query, DigitalUserDocument.class);
+
+        if (digitalUserDocument == null || digitalUserDocument.getAssets() == null ||
+                digitalUserDocument.getAssets().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return digitalUserDocument.getAssets()
+                .stream()
+                .filter(asset -> matchesAssetCriteria(asset, input))
+                .skip(input.getOffset())
+                .limit(input.getLimit())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void delete(String digitalUserId, String externalId) {
+        if (!existsByExternalId(digitalUserId, externalId)) {
+            throw new ResourceNotFoundException(Asset.class, externalId);
+        }
+
+        Query query = new Query(Criteria.where("id").is(digitalUserId));
+        Update update = new Update().pull("assets", new BasicDBObject("externalId", externalId));
+        mongoTemplate.updateFirst(query, update, DigitalUserDocument.class);
+    }
+
+    private boolean existsByExternalId(String digitalUserId, String externalId) {
+        Query query = new Query().addCriteria(Criteria.where("id").is(digitalUserId))
+                .addCriteria(Criteria.where("assets.externalId").is(externalId));
+
+        return mongoTemplate.exists(query, DigitalUserDocument.class);
+    }
+
+    private boolean matchesAssetCriteria(Asset asset, ListAssetsByCriteriaUseCase.Input input) {
+        if (input.getGroupId() != null) {
+            if (asset.getArtifactInformation() == null
+                    || !input.getGroupId().equals(asset.getArtifactInformation().getGroupId())) {
+                return false;
+            }
+        }
+
+        if (input.getArtifactId() != null) {
+            if (asset.getArtifactInformation() == null
+                    || !input.getArtifactId().equals(asset.getArtifactInformation().getArtifactId())) {
+                return false;
+            }
+        }
+
+        if (input.getType() != null && !input.getType().equals(asset.getType())) {
+            return false;
+        }
+
+        if (input.getExternalIds() != null && !input.getExternalIds().isEmpty()) {
+            List<String> externalIds = List.of(input.getExternalIds().split(","));
+
+            if (asset.getExternalId() == null || !externalIds.contains(asset.getExternalId())) {
+                return false;
+            }
+        }
+
+        if (input.getCreatedAt() != null) {
+            if (!asset.getCreatedAt().toLocalDate().equals(input.getCreatedAt())) {
+                return false;
+            }
+        } else {
+            if (input.getFrom() != null && asset.getCreatedAt().isBefore(input.getFrom().atStartOfDay())) {
+                return false;
+            }
+
+            if (input.getTo() != null && asset.getCreatedAt()
+                    .isAfter(input.getTo().atTime(23, 59, 59, 999999999))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+-----------------------
+DigitalUserDataProviderNoSql.java:
+package com.tracktainment.duxmanager.dataprovider;
+
+import com.mongodb.client.result.DeleteResult;
+import com.tracktainment.duxmanager.document.DigitalUserDocument;
+import com.tracktainment.duxmanager.domain.DigitalUser;
+import com.tracktainment.duxmanager.dto.DigitalUserCreate;
+import com.tracktainment.duxmanager.exception.ResourceAlreadyExistsException;
+import com.tracktainment.duxmanager.exception.ResourceNotFoundException;
+import com.tracktainment.duxmanager.mapper.DigitalUserMapperDataProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class DigitalUserDataProviderNoSql implements DigitalUserDataProvider {
+
+    private final DigitalUserMapperDataProvider mapper;
+    private final MongoTemplate mongoTemplate;
+
+    @Override
+    @Transactional
+    public DigitalUser create(DigitalUserCreate digitalUserCreate) {
+        if (existsBySubjectAndIdentityProviderAndTenant(
+                digitalUserCreate.getIdentityProviderInformation().getSubject(),
+                digitalUserCreate.getIdentityProviderInformation().getIdentityProvider(),
+                digitalUserCreate.getIdentityProviderInformation().getTenantId()
+        )) {
+            throw new ResourceAlreadyExistsException(
+                    DigitalUserDocument.class,
+                    String.format(
+                            "subject: %s, idP: %s, tenantId: %s",
+                            digitalUserCreate.getIdentityProviderInformation().getSubject(),
+                            digitalUserCreate.getIdentityProviderInformation().getIdentityProvider(),
+                            digitalUserCreate.getIdentityProviderInformation().getTenantId()
+                    )
+            );
+        }
+
+        DigitalUserDocument digitalUserDocument = mapper.toDigitalUserDocument(digitalUserCreate);
+        digitalUserDocument = mongoTemplate.save(digitalUserDocument);
+        return mapper.toDigitalUser(digitalUserDocument);
+    }
+
+    @Override
+    public DigitalUser findById(String id) {
+        return mapper.toDigitalUser(findDigitalUserDocumentById(id));
+    }
+
+    @Override
+    public DigitalUser findBySubAndIdPAndTenant(String subject, DigitalUser.IdentityProviderInformation.IdentityProvider identityProvider, String tenantId) {
+        Query query = new Query().addCriteria(Criteria.where("identityProviderInformation.subject").is(subject))
+                .addCriteria(Criteria.where("identityProviderInformation.identityProvider").is(identityProvider))
+                .addCriteria(Criteria.where("identityProviderInformation.tenantId").is(tenantId));
+
+        DigitalUserDocument digitalUserDocument = mongoTemplate.findOne(query, DigitalUserDocument.class);
+        if (digitalUserDocument == null) {
+            throw new ResourceNotFoundException(
+                    DigitalUserDocument.class,
+                    String.format(
+                            "with combination of subject: %s, identity provider: %s and tenant ID: %s",
+                            subject,
+                            identityProvider,
+                            tenantId
+                    )
+            );
+        }
+
+        return mapper.toDigitalUser(digitalUserDocument);
+    }
+
+    @Override
+    @Transactional
+    public void delete(String id) {
+        Query query = new Query(Criteria.where("id").is(id));
+        DeleteResult deleteResult = mongoTemplate.remove(query, DigitalUserDocument.class);
+
+        if (deleteResult.getDeletedCount() == 0) {
+            throw new ResourceNotFoundException(DigitalUserDocument.class, id);
+        }
+    }
+
+    private boolean existsBySubjectAndIdentityProviderAndTenant(
+            String subject,
+            DigitalUserCreate.IdentityProviderInformation.IdentityProvider identityProvider,
+            String tenantId
+    ) {
+        Query query = new Query()
+                .addCriteria(Criteria.where("identityProviderInformation.subject").is(subject))
+                .addCriteria(Criteria.where("identityProviderInformation.identityProvider").is(identityProvider))
+                .addCriteria(Criteria.where("identityProvider.tenantId").is(tenantId));
+
+        return mongoTemplate.exists(query, DigitalUserDocument.class);
+    }
+
+    public boolean existsById(String id) {
+        Query query = new Query(Criteria.where("id").is(id));
+        return mongoTemplate.exists(query, DigitalUserDocument.class);
+    }
+
+    public DigitalUserDocument findDigitalUserDocumentById(String id) {
+        Query query = new Query(Criteria.where("id").is(id));
+        DigitalUserDocument digitalUserDocument = mongoTemplate.findOne(query, DigitalUserDocument.class);
+
+        if (digitalUserDocument == null) {
+            throw new ResourceNotFoundException(DigitalUserDocument.class, id);
+        }
+
+        return digitalUserDocument;
+    }
+}
+-----------------------
+BaseDocument.java:
+package com.tracktainment.duxmanager.document;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.time.LocalDateTime;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@SuperBuilder
+public class BaseDocument {
+
+    @Id
+    @Field("_id_")
+    private ObjectId dbId;
+
+    @CreatedDate
+    @Field("created_at")
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Field("updated_at")
+    private LocalDateTime updatedAt;
+
+    private boolean isNew() {
+        return updatedAt == null;
+    }
+}
+-----------------------
+DigitalUserDocument.java:
+package com.tracktainment.duxmanager.document;
+
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.domain.DigitalUser;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@Document(collection = "digital-users")
+public class DigitalUserDocument extends BaseDocument {
+
+    @Indexed(unique = true)
+    private String id;
+
+    private DigitalUser.IdentityProviderInformation identityProviderInformation;
+    private DigitalUser.PersonalInformation personalInformation;
+    private List<DigitalUser.ContactMedium> contactMediumList;
+
+    @Field("assets")
+    private List<Asset> assets = new ArrayList<>();
+}
+-----------------------
+AssetMapperDataProvider.java:
+package com.tracktainment.duxmanager.mapper;
+
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.dto.AssetCreate;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+
+import java.util.UUID;
+
+@Mapper(
+        componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        imports = {UUID.class}
+)
+public interface AssetMapperDataProvider {
+
+    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Asset toAsset(AssetCreate assetCreate);
+}
+-----------------------
+DigitalUserMapperDataProvider.java:
+package com.tracktainment.duxmanager.mapper;
+
+import com.tracktainment.duxmanager.document.DigitalUserDocument;
+import com.tracktainment.duxmanager.domain.DigitalUser;
+import com.tracktainment.duxmanager.dto.DigitalUserCreate;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+
+import java.util.UUID;
+
+@Mapper(
+        componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        imports = {UUID.class}
+)
+public interface DigitalUserMapperDataProvider {
+
+    DigitalUser toDigitalUser(DigitalUserDocument digitalUserDocument);
+
+    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+    @Mapping(target = "assets", ignore = true)
+    @Mapping(target = "dbId", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    DigitalUserDocument toDigitalUserDocument(DigitalUserCreate digitalUserCreate);
+}
+-----------------------
+---------------
+------------
+-------------------
+dux-manager-entrypoint-rest:
+pom.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- #########################################################################  -->
+	<!-- #### P A R E N T _ P R O J E C T ######################################## -->
+	<!-- ######################################################################### -->
+
+	<parent>
+		<groupId>com.tracktainment</groupId>
+		<artifactId>dux-manager</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ D E S C R I P T I O N ############################## -->
+	<!-- ######################################################################### -->
+
+	<artifactId>dux-manager-entrypoint-rest</artifactId>
+	<name>DUX Manager :: Entry Point REST</name>
+	<description>Digital User Context Manager Entry Point REST Module</description>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ D E P E N D E N C I E S ############################ -->
+	<!-- ######################################################################### -->
+
+	<dependencies>
+		<!-- internal dependencies -->
+		<dependency>
+			<groupId>com.tracktainment</groupId>
+			<artifactId>dux-manager-core</artifactId>
+		</dependency>
+
+		<!-- external dependencies -->
+	</dependencies>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ P R O P E R T I E S ################################ -->
+	<!-- ######################################################################### -->
+
+	<properties>
+		<jose4j.version>0.9.6</jose4j.version>
+	</properties>
+
+	<!-- #########################################################################  -->
+	<!-- #### P R O J E C T _ B U I L D ########################################## -->
+	<!-- ######################################################################### -->
+
+	<build>
+	</build>
+
+</project>
+-----------------------
+AssetRestApi.java:
+package com.tracktainment.duxmanager.api;
+
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.dto.AssetCreate;
+import com.tracktainment.duxmanager.util.Constants;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@RequestMapping("api/v1/assets")
+@Validated
+public interface AssetRestApi {
+
+    @PostMapping(
+            path = "/digitalUsers/{digitalUserId}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    ResponseEntity<Asset> create(
+            @PathVariable
+            @Pattern(regexp = Constants.ID_REGEX, message = Constants.DIGITAL_USER_ID_INVALID_MSG) String digitalUserId,
+
+            @RequestBody @Valid AssetCreate assetCreate
+    );
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<Asset>> listByCriteria(
+            @RequestParam(required = false, defaultValue = Constants.DEFAULT_OFFSET)
+            @Min(value = Constants.MIN_OFFSET, message = Constants.OFFSET_INVALID_MSG) Integer offset,
+
+            @RequestParam(required = false, defaultValue = Constants.DEFAULT_LIMIT)
+            @Min(value = Constants.MIN_LIMIT, message = Constants.LIMIT_INVALID_MSG)
+            @Max(value = Constants.MAX_LIMIT, message = Constants.LIMIT_INVALID_MSG) Integer limit,
+
+            @RequestParam()
+            @Pattern(regexp = Constants.ID_REGEX, message = Constants.DIGITAL_USER_ID_INVALID_MSG) String digitalUserId,
+
+            @RequestParam(required = false)
+            @Pattern(regexp = Constants.ID_LIST_REGEX, message = Constants.IDS_INVALID_MSG) String externalIds,
+
+            @RequestParam(required = false)
+            @Pattern(regexp = Constants.GROUP_ID_REGEX, message = Constants.GROUP_ID_INVALID_MSG) String groupId,
+
+            @RequestParam(required = false)
+            @Pattern(regexp = Constants.ARTIFACT_ID_REGEX, message = Constants.ARTIFACT_ID_INVALID_MSG) String artifactId,
+
+            @RequestParam(required = false)
+            @Pattern(regexp = Constants.TYPE_REGEX, message = Constants.TYPE_INVALID_MSG) String type,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAt,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+    );
+
+    @DeleteMapping
+    ResponseEntity<Void> delete(
+            @RequestParam
+            @Pattern(regexp = Constants.ID_REGEX, message = Constants.DIGITAL_USER_ID_INVALID_MSG) String digitalUserId,
+
+            @RequestParam
+            @Pattern(regexp = Constants.ID_REGEX, message = Constants.ID_INVALID_MSG) String externalId
+    );
+}
+-----------------------
+DigitalUserRestApi.java:
+package com.tracktainment.duxmanager.api;
+
+import com.tracktainment.duxmanager.domain.DigitalUser;
+import com.tracktainment.duxmanager.dto.DigitalUserCreate;
+import com.tracktainment.duxmanager.util.Constants;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+@RequestMapping("api/v1/digitalUsers")
+@Validated
+public interface DigitalUserRestApi {
+
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    ResponseEntity<DigitalUser> create(@RequestBody @Valid  DigitalUserCreate digitalUserCreate);
+
+    @GetMapping(
+            path = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    ResponseEntity<DigitalUser> findById(
+            @PathVariable @Pattern(regexp = Constants.ID_REGEX, message = Constants.ID_INVALID_MSG) String id
+    );
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<DigitalUser> findBySubAndIdPAndTenant(
+            @RequestParam(name = "identityProviderInformation.subject")
+            @Pattern(regexp = Constants.SUB_REGEX, message = Constants.SUB_INVALID_MSG) String subject,
+
+            @RequestParam(name = "identityProviderInformation.identityProvider")
+            DigitalUser.IdentityProviderInformation.IdentityProvider identityProvider,
+
+            @RequestParam(name = "identityProviderInformation.tenantId")
+            @Pattern(regexp = Constants.TENANT_ID_REGEX, message = Constants.TENANT_ID_INVALID_MSG) String tenantId
+    );
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> delete(
+            @PathVariable @Pattern(regexp = Constants.ID_REGEX, message = Constants.ID_INVALID_MSG) String id
+    );
+}
+-----------------------
+AssetRestController.java:
+package com.tracktainment.duxmanager.controller;
+
+import com.tracktainment.duxmanager.api.AssetRestApi;
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.dto.AssetCreate;
+import com.tracktainment.duxmanager.usecases.asset.CreateAssetUseCase;
+import com.tracktainment.duxmanager.usecases.asset.DeleteAssetUseCase;
+import com.tracktainment.duxmanager.usecases.asset.ListAssetsByCriteriaUseCase;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@Validated
+@Slf4j
+public class AssetRestController implements AssetRestApi {
+
+    private final CreateAssetUseCase createAssetUseCase;
+    private final ListAssetsByCriteriaUseCase listAssetsByCriteriaUseCase;
+    private final DeleteAssetUseCase deleteAssetUseCase;
+
+    @Override
+    public ResponseEntity<Asset> create(String digitalUserId, AssetCreate assetCreate) {
+        log.info("Creating asset on digital user {}: {}", digitalUserId, assetCreate);
+        CreateAssetUseCase.Input input = CreateAssetUseCase.Input.builder()
+                .digitalUserId(digitalUserId)
+                .assetCreate(assetCreate)
+                .build();
+
+        CreateAssetUseCase.Output output = createAssetUseCase.execute(input);
+        return new ResponseEntity<>(output.getAsset(), HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<List<Asset>> listByCriteria(
+            Integer offset,
+            Integer limit,
+            String digitalUserId,
+            String externalIds,
+            String groupId,
+            String artifactId,
+            String type,
+            LocalDate createdAt,
+            LocalDate from,
+            LocalDate to
+    ) {
+        ListAssetsByCriteriaUseCase.Input input = ListAssetsByCriteriaUseCase.Input.builder()
+                .offset(offset)
+                .limit(limit)
+                .digitalUserId(digitalUserId)
+                .externalIds(externalIds)
+                .groupId(groupId)
+                .artifactId(artifactId)
+                .type(type)
+                .createdAt(createdAt)
+                .from(from)
+                .to(to)
+                .build();
+
+        log.info("Listing assets by criteria: {}", input);
+        ListAssetsByCriteriaUseCase.Output output = listAssetsByCriteriaUseCase.execute(input);
+        return new ResponseEntity<>(output.getAssets(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> delete(String digitalUserId, String externalId) {
+        log.info("Deleting asset with id {} from digital user {}.", externalId, digitalUserId);
+        DeleteAssetUseCase.Input input = DeleteAssetUseCase.Input.builder()
+                .digitalUserId(digitalUserId)
+                .externalId(externalId)
+                .build();
+
+        deleteAssetUseCase.execute(input);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+}
+-----------------------
+DigitalUserRestController.java:
+package com.tracktainment.duxmanager.controller;
+
+import com.tracktainment.duxmanager.api.DigitalUserRestApi;
+import com.tracktainment.duxmanager.domain.DigitalUser;
+import com.tracktainment.duxmanager.dto.DigitalUserCreate;
+import com.tracktainment.duxmanager.usecases.digitaluser.CreateDigitalUserUseCase;
+import com.tracktainment.duxmanager.usecases.digitaluser.DeleteDigitalUserUseCase;
+import com.tracktainment.duxmanager.usecases.digitaluser.FindDigitalUserByIdUseCase;
+import com.tracktainment.duxmanager.usecases.digitaluser.FindDigitalUserBySubAndIdPAndTenantUseCase;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@Validated
+@Slf4j
+public class DigitalUserRestController implements DigitalUserRestApi {
+
+    private final CreateDigitalUserUseCase createDigitalUserUseCase;
+    private final FindDigitalUserByIdUseCase findDigitalUserByIdUseCase;
+    private final FindDigitalUserBySubAndIdPAndTenantUseCase findDigitalUserBySubAndIdPAndTenantUseCase;
+    private final DeleteDigitalUserUseCase deleteDigitalUserUseCase;
+
+    @Override
+    public ResponseEntity<DigitalUser> create(DigitalUserCreate digitalUserCreate) {
+        log.info("Creating digital user: {}", digitalUserCreate);
+        CreateDigitalUserUseCase.Input input = CreateDigitalUserUseCase.Input.builder()
+                .digitalUserCreate(digitalUserCreate)
+                .build();
+
+        CreateDigitalUserUseCase.Output output = createDigitalUserUseCase.execute(input);
+        return new ResponseEntity<>(output.getDigitalUser(), HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<DigitalUser> findById(String id) {
+        log.info("Finding digital user by id: {}", id);
+        FindDigitalUserByIdUseCase.Input input = FindDigitalUserByIdUseCase.Input.builder()
+                .digitalUserId(id)
+                .build();
+
+        FindDigitalUserByIdUseCase.Output output = findDigitalUserByIdUseCase.execute(input);
+        return new ResponseEntity<>(output.getDigitalUser(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<DigitalUser> findBySubAndIdPAndTenant(
+            String subject,
+            DigitalUser.IdentityProviderInformation.IdentityProvider identityProvider,
+            String tenantId
+    ) {
+        log.info(
+                "Finding digital user by subject: {}, identity provider: {} and tenant ID: {}",
+                subject,
+                identityProvider,
+                tenantId
+        );
+
+        FindDigitalUserBySubAndIdPAndTenantUseCase.Input input =
+                FindDigitalUserBySubAndIdPAndTenantUseCase.Input.builder()
+                .subject(subject)
+                .identityProvider(identityProvider)
+                .tenantId(tenantId)
+                .build();
+
+        FindDigitalUserBySubAndIdPAndTenantUseCase.Output output =
+                findDigitalUserBySubAndIdPAndTenantUseCase.execute(input);
+
+        return new ResponseEntity<>(output.getDigitalUser(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> delete(String id) {
+        log.info("Deleting digital user by id: {}", id);
+        DeleteDigitalUserUseCase.Input input = DeleteDigitalUserUseCase.Input.builder()
+                .digitalUserId(id)
+                .build();
+
+        deleteDigitalUserUseCase.execute(input);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+}
+-----------------------
+ExceptionDto.java:
+package com.tracktainment.duxmanager.exception;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ExceptionDto {
+
+    private String code;
+    private int httpStatusCode;
+    private String reason;
+    private String message;
+}
+-----------------------
+RestExceptionHandler.java:
+package com.tracktainment.duxmanager.exception;
+
+import com.tracktainment.duxmanager.mapper.ExceptionMapperEntryPoint;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+@RequiredArgsConstructor
+public class RestExceptionHandler {
+
+    private final ExceptionMapperEntryPoint mapper;
+
+    @ExceptionHandler(BusinessException.class)
+    ResponseEntity<ExceptionDto> handleBusinessException(BusinessException e) {
+        return new ResponseEntity<>(
+                mapper.toExceptionDto(e),
+                new HttpHeaders(),
+                e.getHttpStatusCode()
+        );
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    ResponseEntity<ExceptionDto> handleGlobalException(Exception e) {
+        return handleBusinessException(
+                new  InternalServerErrorException(e.getMessage())
+        );
+    }
+}
+-----------------------
+ExceptionMapperEntryPoint.java:
+package com.tracktainment.duxmanager.mapper;
+
+import com.tracktainment.duxmanager.exception.BusinessException;
+import com.tracktainment.duxmanager.exception.ExceptionDto;
+import org.mapstruct.Mapper;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+
+@Mapper(
+        componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
+public interface ExceptionMapperEntryPoint {
+
+    ExceptionDto toExceptionDto(BusinessException e);
+}
+-----------------------
+SecurityConfig.java:
+package com.tracktainment.duxmanager.security.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+
+        return http.build();
+    }
+}
+
+-----------------------
+---------------
+------------
+-------------------
+resources:
+generate.sh:
+#!/bin/bash
+
+service="dux-manager"
+CN="Digital User Context Manager"
+pwd="your-password"
+
+dev_dns="localhost"
+sat_dns="localhost"
+pre_dns="localhost"
+prod_dns="localhost"
+
+rm -f $service.p12
+rm -f $service.p12
+
+# generate the .p12 file: private and public certificate
+keytool -genkeypair \
+  -alias $service \
+  -keyalg RSA \
+  -keysize 4096 \
+  -sigalg SHA512withRSA \
+  -storetype PKCS12 \
+  -validity 3650 \
+  -keystore $service.p12 \
+  -keypass $pwd \
+  -storepass $pwd \
+  -dname "CN=$service, OU=Software Engineering, O=Portfolio, L=Brussels, ST=Brussels, C=Belgium" \
+  -ext SAN=DNS:$dev_dns,DNS:$sat_dns,DNS:$pre_dns,DNS:$prod_dns
+
+# export the public certificate from the .p12 file
+keytool -exportcert \
+    -alias $service \
+    -keystore $service.p12 \
+    -file $service.cer \
+    -rfc \
+    -storepass $pwd
+
+# force delete certificate from Java Virtual Machine
+keytool -delete \
+  -alias $service \
+  -cacerts \
+  -noprompt
+
+# install certificate in Java Virtual Machine
+keytool -import \
+  -alias $service \
+  -cacerts \
+  -file $service.cer \
+  -noprompt
+
+# copy certificate to Spring Boot App class path
+cp -f $service.p12 ../../*-application/src/main/resources/certificate/
+-----------------------
+Dockerfile:
+# Build stage
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
+WORKDIR /app
+COPY ../.. .
+RUN mvn clean install
+
+# Runtime stage
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=builder /app/dux-manager-application/target/dux-manager-application-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8443
+CMD ["java", "-jar", "app.jar"]-----------------------
+docker-compose.yml:
+services:
+  mongodb:
+    image: mongo:6.0
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - shared-network
+
+  dux-manager:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8443:8443"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/DuxManager
+      SERVER_PORT: 8443
+    depends_on:
+      - mongodb
+    networks:
+      - shared-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  shared-network:
+    external: true
+-----------------------
+---------------
+------------
+
+Parent POM:
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- ######################################################################### -->
+	<!-- #### P A R E N T _ P R O J E C T ######################################## -->
+	<!-- ######################################################################### -->
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<!-- ######################################################################### -->
+	<!-- #### P R O J E C T _ D E S C R I P T I O N ############################## -->
+	<!-- ######################################################################### -->
+
+	<groupId>com.tracktainment</groupId>
+	<artifactId>book-manager</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Book Manager</name>
+	<description>Book Manager App</description>
+
+	<!-- ######################################################################### -->
+	<!-- #### P R O J E C T _ M O D U L E S ###################################### -->
+	<!-- ######################################################################### -->
+
+	<modules>
+		<module>book-manager-application</module>
+		<module>book-manager-entrypoint-rest</module>
+		<module>book-manager-core</module>
+		<module>book-manager-dataprovider-sql</module>
+		<module>book-manager-dataprovider-rest</module>
+	</modules>
+
+	<!-- ######################################################################### -->
+	<!-- #### P R O J E C T _ D E P E N D E N C I E S ############################ -->
+	<!-- ######################################################################### -->
+
+	<dependencyManagement>
+		<!-- internal dependencies -->
+		<dependencies>
+			<dependency>
+				<groupId>com.tracktainment</groupId>
+				<artifactId>book-manager-application</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.tracktainment</groupId>
+				<artifactId>book-manager-entrypoint-rest</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.tracktainment</groupId>
+				<artifactId>book-manager-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.tracktainment</groupId>
+				<artifactId>book-manager-dataprovider-sql</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.tracktainment</groupId>
+				<artifactId>book-manager-dataprovider-rest</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- external dependencies -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>2023.0.3</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<!-- JVM -->
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>${maven-compiler-plugin.version}</version>
+		</dependency>
+
+		<!-- Spring Boot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring-context.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+			<version>${spring-boot-starter-parent.version}</version>
+		</dependency>
+
+		<!-- Swagger -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+		</dependency>
+
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+		</dependency>
+
+		<!-- MapStruct -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+
+		<!-- Mockito -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- To integrate with auth8 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+	</dependencies>
+
+	<!-- ######################################################################### -->
+	<!-- #### P R O J E C T _ P R O P E R T I E S ################################ -->
+	<!-- ######################################################################### -->
+
+	<properties>
+		<!-- JVM -->
+		<java.version>17</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+
+		<!-- Spring Boot -->
+		<spring-boot-starter-parent.version>3.3.4</spring-boot-starter-parent.version>
+		<spring-context.version>6.1.13</spring-context.version>
+
+		<!-- Swagger -->
+		<springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
+
+		<!-- Lombok -->
+		<lombok.version>1.18.34</lombok.version>
+
+		<!-- MapStruct -->
+		<mapstruct.version>1.6.2</mapstruct.version>
+		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+	</properties>
+
+	<!-- ######################################################################### -->
+	<!-- #### P R O J E C T _ B U I L D ########################################## -->
+	<!-- ######################################################################### -->
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
