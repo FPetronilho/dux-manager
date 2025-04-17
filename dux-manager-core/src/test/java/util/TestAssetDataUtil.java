@@ -1,0 +1,69 @@
+package util;
+
+import com.tracktainment.duxmanager.domain.Asset;
+import com.tracktainment.duxmanager.dto.AssetCreate;
+import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
+
+public class TestAssetDataUtil {
+
+    public static AssetCreate createTestAssetCreate1() {
+        return AssetCreate.builder()
+                .externalId("123e4567-e89b-12d3-a456-426614174001")
+                .type("book")
+                .permissionPolicy(Asset.PermissionPolicy.OWNER)
+                .artifactInformation(Asset.ArtifactInformation.builder()
+                        .groupId("com.tracktainment")
+                        .artifactId("book-manager")
+                        .version("1.0.0")
+                        .build())
+                .build();
+    }
+
+    public static AssetCreate createTestAssetCreate2() {
+        return AssetCreate.builder()
+                .externalId("123e4567-e89b-12d3-a456-426614174005")
+                .type("game")
+                .permissionPolicy(Asset.PermissionPolicy.VIEWER)
+                .artifactInformation(Asset.ArtifactInformation.builder()
+                        .groupId("com.tracktainment")
+                        .artifactId("game-manager")
+                        .version("1.0.0")
+                        .build())
+                .build();
+    }
+
+    public static Asset createTestAsset1() {
+        return Asset.builder()
+                .id("123e4567-e89b-12d3-a456-426614174002")
+                .externalId(createTestAssetCreate1().getExternalId())
+                .type(createTestAssetCreate1().getType())
+                .permissionPolicy(createTestAssetCreate1().getPermissionPolicy())
+                .artifactInformation(Asset.ArtifactInformation.builder()
+                        .groupId(createTestAssetCreate1().getArtifactInformation().getGroupId())
+                        .artifactId(createTestAssetCreate1().getArtifactInformation().getArtifactId())
+                        .version(createTestAssetCreate1().getArtifactInformation().getVersion())
+                        .build())
+                .build();
+    }
+
+    public static Asset createTestAsset2() {
+        return Asset.builder()
+                .id("123e4567-e89b-12d3-a456-426614174004")
+                .externalId(createTestAssetCreate2().getExternalId())
+                .type(createTestAssetCreate2().getType())
+                .permissionPolicy(createTestAssetCreate2().getPermissionPolicy())
+                .artifactInformation(Asset.ArtifactInformation.builder()
+                        .groupId(createTestAssetCreate2().getArtifactInformation().getGroupId())
+                        .artifactId(createTestAssetCreate2().getArtifactInformation().getArtifactId())
+                        .version(createTestAssetCreate2().getArtifactInformation().getVersion())
+                        .build())
+                .build();
+    }
+
+    public static DigitalUserSecurityContext createTestDigitalUserSecurityContext() {
+        return DigitalUserSecurityContext.builder()
+                .id("123e4567-e89b-12d3-a456-426614174000")
+                .subject("auth2|123456789")
+                .build();
+    }
+}

@@ -1,5 +1,6 @@
 package com.tracktainment.duxmanager.security.util;
 
+import com.tracktainment.duxmanager.exception.AuthenticationFailedException;
 import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -15,7 +16,7 @@ public class SecurityUtil {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !(authentication.getPrincipal() instanceof Jwt jwt)) {
-            throw new IllegalStateException("JWT not found in security context.");
+            throw new AuthenticationFailedException("JWT not found in security context.");
         }
 
         DigitalUserSecurityContext digitalUserSecurityContext = new DigitalUserSecurityContext();

@@ -1,4 +1,4 @@
-package usecases;
+package usecases.asset;
 
 import com.tracktainment.duxmanager.dataprovider.AssetDataProvider;
 import com.tracktainment.duxmanager.domain.Asset;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import util.TestDataUtil;
+import util.TestAssetDataUtil;
 
 import java.util.UUID;
 
@@ -42,15 +42,17 @@ public class CreateAssetUseCaseTest {
 
     @BeforeEach
     void setup() {
-        assetCreate = TestDataUtil.createTestAssetCreate();
-        asset = TestDataUtil.createTestAsset();
-        digitalUserSecurityContext = TestDataUtil.createTestDigitalUserSecurityContext();
+        assetCreate = TestAssetDataUtil.createTestAssetCreate1();
+        asset = TestAssetDataUtil.createTestAsset1();
+        digitalUserSecurityContext = TestAssetDataUtil.createTestDigitalUserSecurityContext();
     }
 
     @Test
     void shouldCreateAssetSuccessfully() {
         // Arrange
-        when(securityUtil.getDigitalUser()).thenReturn(digitalUserSecurityContext);
+        when(securityUtil.getDigitalUser())
+                .thenReturn(digitalUserSecurityContext);
+
         when(assetDataProvider.create(eq(digitalUserSecurityContext.getId()), any(AssetCreate.class)))
                 .thenReturn(asset);
 
@@ -67,6 +69,7 @@ public class CreateAssetUseCaseTest {
         assertNotNull(output.getAsset());
         assertEquals(asset.getId(), output.getAsset().getId());
         assertEquals(asset.getExternalId(), output.getAsset().getExternalId());
+        assertEquals(asset.getType(), output.getAsset().getType());
         assertEquals(asset.getPermissionPolicy(), output.getAsset().getPermissionPolicy());
         assertEquals(
                 asset.getArtifactInformation().getArtifactId(),
@@ -88,11 +91,11 @@ public class CreateAssetUseCaseTest {
     @Test
     void shouldThrowAuthenticationFailedExceptionWhenUserIdDoesNotMatch() {
         // Arrange
-        String differentUser = UUID.randomUUID().toString();
-        when(securityUtil.getDigitalUser()).thenReturn(digitalUserSecurityContext);
+        when(securityUtil.getDigitalUser())
+                .thenReturn(digitalUserSecurityContext);
 
         CreateAssetUseCase.Input input = CreateAssetUseCase.Input.builder()
-                .digitalUserId(differentUser)
+                .digitalUserId(UUID.randomUUID().toString())
                 .assetCreate(assetCreate)
                 .build();
 
@@ -106,7 +109,9 @@ public class CreateAssetUseCaseTest {
     @Test
     void shouldPropagateResourceAlreadyExistsExceptionFromDataProvider() {
         // Arrange
-        when(securityUtil.getDigitalUser()).thenReturn(digitalUserSecurityContext);
+        when(securityUtil.getDigitalUser())
+                .thenReturn(digitalUserSecurityContext);
+
         when(assetDataProvider.create(eq(digitalUserSecurityContext.getId()), any(AssetCreate.class)))
                 .thenThrow(new ResourceAlreadyExistsException(Asset.class, assetCreate.getExternalId()));
 
@@ -125,7 +130,9 @@ public class CreateAssetUseCaseTest {
     @Test
     void shouldPropagateResourceNotFoundExceptionFromDataProvider() {
         // Arrange
-        when(securityUtil.getDigitalUser()).thenReturn(digitalUserSecurityContext);
+        when(securityUtil.getDigitalUser())
+                .thenReturn(digitalUserSecurityContext);
+
         when(assetDataProvider.create(eq(digitalUserSecurityContext.getId()), any(AssetCreate.class)))
                 .thenThrow(new ResourceNotFoundException(Asset.class, UUID.randomUUID().toString()));
 
@@ -144,7 +151,8 @@ public class CreateAssetUseCaseTest {
     @Test
     void shouldHandleSecurityUtilException() {
         // Arrange
-        when(securityUtil.getDigitalUser()).thenThrow(new IllegalStateException("JWT not found in security context."));
+        when(securityUtil.getDigitalUser())
+                .thenThrow(new AuthenticationFailedException("JWT not found in security context."));
 
         CreateAssetUseCase.Input input = CreateAssetUseCase.Input.builder()
                 .digitalUserId(digitalUserSecurityContext.getId())
@@ -152,7 +160,7 @@ public class CreateAssetUseCaseTest {
                 .build();
 
         // Act & Assert
-        assertThrows(IllegalStateException.class, () -> createAssetUseCase.execute(input));
+        assertThrows(AuthenticationFailedException.class, () -> createAssetUseCase.execute(input));
 
         verify(securityUtil).getDigitalUser();
         verify(assetDataProvider, never()).create(any(), any());
