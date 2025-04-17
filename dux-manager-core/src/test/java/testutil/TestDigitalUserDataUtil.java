@@ -1,4 +1,4 @@
-package util.test;
+package testutil;
 
 import com.tracktainment.duxmanager.domain.DigitalUser;
 import com.tracktainment.duxmanager.dto.DigitalUserCreate;
