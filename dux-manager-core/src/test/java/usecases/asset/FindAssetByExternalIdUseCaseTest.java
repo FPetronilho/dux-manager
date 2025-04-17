@@ -5,8 +5,8 @@ import com.tracktainment.duxmanager.domain.Asset;
 import com.tracktainment.duxmanager.exception.AuthenticationFailedException;
 import com.tracktainment.duxmanager.exception.ResourceAlreadyExistsException;
 import com.tracktainment.duxmanager.exception.ResourceNotFoundException;
-import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
-import com.tracktainment.duxmanager.security.util.SecurityUtil;
+import com.tracktainment.duxmanager.security.DigitalUserSecurityContext;
+import com.tracktainment.duxmanager.security.SecurityUtil;
 import com.tracktainment.duxmanager.usecases.asset.FindAssetByExternalIdUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import util.TestAssetDataUtil;
+import util.test.TestAssetDataUtil;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.tracktainment.duxmanager.security.context;
+package com.tracktainment.duxmanager.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,8 +2,8 @@ package com.tracktainment.duxmanager.usecases.asset;
 
 import com.tracktainment.duxmanager.dataprovider.AssetDataProvider;
 import com.tracktainment.duxmanager.exception.AuthenticationFailedException;
-import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
-import com.tracktainment.duxmanager.security.util.SecurityUtil;
+import com.tracktainment.duxmanager.security.DigitalUserSecurityContext;
+import com.tracktainment.duxmanager.security.SecurityUtil;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

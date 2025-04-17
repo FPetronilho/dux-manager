@@ -1,7 +1,7 @@
-package com.tracktainment.duxmanager.security.util;
+package com.tracktainment.duxmanager.security;
 
 import com.tracktainment.duxmanager.exception.AuthenticationFailedException;
-import com.tracktainment.duxmanager.security.context.DigitalUserSecurityContext;
+import com.tracktainment.duxmanager.security.DigitalUserSecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

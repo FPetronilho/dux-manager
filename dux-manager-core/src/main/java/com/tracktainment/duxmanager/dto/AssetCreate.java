@@ -28,11 +28,11 @@ public class AssetCreate {
 
     @NotNull(message = Constants.ASSET_PERMISSION_POLICY_MANDATORY_MSG)
     @Schema(description = "Permission policy for this asset")
-    private Asset.PermissionPolicy permissionPolicy;
+    private PermissionPolicy permissionPolicy;
 
     @NotNull(message = Constants.ASSET_ARTIFACT_INFO_MANDATORY_MSG)
     @Schema(description = "Artifact information")
-    private Asset.ArtifactInformation artifactInformation;
+    private ArtifactInformation artifactInformation;
 
     @ToString
     @Getter
