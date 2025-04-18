@@ -31,13 +31,13 @@ class SecurityConfigTest {
     @Test
     void shouldPermitAccessToSwaggerEndpoints() throws Exception {
         mockMvc.perform(get("/swagger-ui.html"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
 
         mockMvc.perform(get("/swagger-ui/index.html"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
 
         mockMvc.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
     @Test

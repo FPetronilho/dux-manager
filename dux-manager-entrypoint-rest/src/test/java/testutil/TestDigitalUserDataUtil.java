@@ -13,7 +13,7 @@ public class TestDigitalUserDataUtil {
     public static DigitalUserCreate createTestDigitalUserCreate(){
         return DigitalUserCreate.builder()
                 .identityProviderInformation(DigitalUserCreate.IdentityProviderInformation.builder()
-                        .subject("auth2|123456")
+                        .subject("auth2_123456")
                         .identityProvider(DigitalUserCreate.IdentityProviderInformation.IdentityProvider.KEY_CLOAK)
                         .tenantId("tenant1")
                         .build()
@@ -44,7 +44,7 @@ public class TestDigitalUserDataUtil {
         return DigitalUser.builder()
                 .id("223e4567-e89b-12d3-a456-426614174008")
                 .identityProviderInformation(DigitalUser.IdentityProviderInformation.builder()
-                        .subject("auth2|123456")
+                        .subject("auth2_123456")
                         .identityProvider(DigitalUser.IdentityProviderInformation.IdentityProvider.KEY_CLOAK)
                         .tenantId("tenant1")
                         .build()
