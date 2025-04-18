@@ -4,9 +4,6 @@ import com.tracktainment.duxmanager.domain.Asset;
 import com.tracktainment.duxmanager.dto.AssetCreate;
 import com.tracktainment.duxmanager.security.DigitalUserSecurityContext;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 public class TestAssetDataUtil {
 
     public static AssetCreate createTestAssetCreate1() {
@@ -46,8 +43,6 @@ public class TestAssetDataUtil {
                         .artifactId(createTestAssetCreate1().getArtifactInformation().getArtifactId())
                         .version(createTestAssetCreate1().getArtifactInformation().getVersion())
                         .build())
-                .createdAt(LocalDate.now().atTime(12, 0))
-                .updatedAt(LocalDateTime.now())
                 .build();
     }
 
@@ -62,8 +57,13 @@ public class TestAssetDataUtil {
                         .artifactId(createTestAssetCreate2().getArtifactInformation().getArtifactId())
                         .version(createTestAssetCreate2().getArtifactInformation().getVersion())
                         .build())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static DigitalUserSecurityContext createTestDigitalUserSecurityContext() {
+        return DigitalUserSecurityContext.builder()
+                .id("123e4567-e89b-12d3-a456-426614174000")
+                .subject("auth2|123456789")
                 .build();
     }
 }
