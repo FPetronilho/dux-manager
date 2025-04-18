@@ -1,4 +1,4 @@
-package com.tracktainment.duxmanager.security.config;
+package com.tracktainment.duxmanager.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

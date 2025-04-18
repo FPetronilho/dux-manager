@@ -14,7 +14,7 @@ public class RestExceptionHandler {
     private final ExceptionMapperEntryPoint mapper;
 
     @ExceptionHandler(BusinessException.class)
-    ResponseEntity<ExceptionDto> handleBusinessException(BusinessException e) {
+    public ResponseEntity<ExceptionDto> handleBusinessException(BusinessException e) {
         return new ResponseEntity<>(
                 mapper.toExceptionDto(e),
                 new HttpHeaders(),
@@ -23,7 +23,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    ResponseEntity<ExceptionDto> handleGlobalException(Exception e) {
+    public ResponseEntity<ExceptionDto> handleGlobalException(Exception e) {
         return handleBusinessException(
                 new  InternalServerErrorException(e.getMessage())
         );
