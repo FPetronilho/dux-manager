@@ -1,46 +1,89 @@
 # Dux Manager Microservice
-
 The Digital User Context (DUX) Manager microservice is part of the Tracktainment application, which is designed to track books, movies, and games consumed by users. This microservice is responsible for managing digital users and their associated assets (e.g., books, games, movies). It uses MongoDB as the primary database and provides REST APIs for external clients.
 
 ## Table of Contents
-
 - [Overview](#overview)
 - [Architecture](#architecture)
 - [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
 - [API Endpoints](#api-endpoints)
-- [Getting Started](#getting-started)
+- [API Documentation](#api-documentation)
+- [Setup and Installation](#setup-and-installation)
   - [Prerequisites](#prerequisites)
-  - [Configuration](#configuration)
-  - [Building](#building)
-  - [Running Locally](#running-locally)
+  - [Local Development](#local-development)
   - [Docker Setup](#docker-setup)
+- [Authentication](#authentication)
 - [Error Handling](#error-handling)
 - [Validation](#validation)
-- [Development](#development)
-  - [Tech Stack](#tech-stack)
-  - [Project Structure](#project-structure)
-  - [Next Features](#next-features)
+- [Next Features](#next-features)
 - [Potential Tracktainment Upgrades](#potential-tracktainment-upgrades)
 
 ## Overview
-
-The DUX Manager microservice provides Create, Read and Delete operations for managing digital users and their assets. It adheres to the principles of Clean Architecture, ensuring modularity, scalability, and maintainability. The service uses MongoDB for persistent storage and integrates with other microservices via REST APIs.
+DUX Manager is a microservice application that provides RESTful APIs for managing digital users and their assets. It follows clean architecture principles with a clear separation of concerns, making it maintainable, testable, and scalable. The application allows users to create, read and delete digital users and their assets.
 
 ## Architecture
-
 The project follows a clean architecture with clear separation of concerns:
-
-- **Application Module**: Handles application configuration and properties.
-- **Core Module**: Contains domain models, DTOs, use cases, and interfaces for data providers.
-- **Data Provider NoSQL Module**: Implementation of persistence layer using MongoDB.
-- **Entry Point REST Module**: REST API controllers and exception handling.
+- **Application Module**: Handles application configuration and properties
+- **Core Module**: Contains business rules, domain models, and use cases
+- **Data Provider SQL Module**: Implementation of persistence layer using JPA/Hibernate
+- **Entry Point REST Module**: REST API controllers and resources
 
 ## Features
-
 - Create, read and delete operations for digital users and assets.
-- Advanced filtering and search capabilities for assets.
-- Integration with external services for asset management.
-- Comprehensive validation and error handling.
+- Advanced filtering and search capabilities
+- OAuth2 security with JWT
+- Swagger/OpenAPI documentation
+- Comprehensive validation and exception handling
+- Comprehensive unit testing
+
+## Tech Stack
+- Java 17
+- Spring Boot 3.3.4
+- Spring Data MongoDB
+- Spring Security with OAuth2
+- Jakarta Validation
+- Lombok
+- MapStruct
+- MongoDB
+- Maven
+- Docker
+- Swagger/OpenAPI
+- HTTPS enabled via SSL certificates
+- JUnit 5 & Mockito
+
+### Project Structure
+
+```
+dux-manager
+├── dux-manager-application            # Spring Boot application module
+├── dux-manager-core                   # Core domain and business logic
+│       ├── domain                     # Domain models
+│       ├── dto                        # Data Transfer Objects
+│       ├── exception                  # Exception definitions
+│       ├── security                   # Security context
+│       ├── usecases                   # Business use cases
+│       ├── util                       # Utility classes
+│       └── dataprovider               # Data provider interfaces
+│
+├── dux-manager-entrypoint-rest        # REST API entry point
+│       ├── api                        # API interfaces
+│       ├── controller                 # REST controllers
+|       ├── converter                  # Enum to String converter
+│       ├── exception                  # REST exception handlers
+│       ├── mapper                     # Mappers for REST module
+│       ├── security                   # Security configuration
+│       └── swagger                    # OpenAPI/Swagger config
+│
+├── dux-manager-dataprovider-no-sql    # MongoDB data provider implementation
+│       ├── dataprovider               # MongoDB data provider implementations
+│       ├── document                   # MongoDB documents
+│       └── mapper                     # MongoDB-specific mappers
+│
+└── resources                          # Project resources
+    ├── certificate                    # SSL certificates
+    └── docker                         # Docker configuration
+```
 
 ## API Endpoints
 
@@ -54,16 +97,23 @@ The project follows a clean architecture with clear separation of concerns:
 | GET      | `/api/v1/assets`                              | List assets with filters                                         |
 | DELETE   | `/api/v1/assets`                              | Delete an asset                                                  |
 
+## API Documentation
+When running the application, the Swagger UI is available at:
+```
+https://localhost:8443/dux-manager/swagger-ui.html
+```
+The OpenAPI specification is available at:
+```
+https://localhost:8443/dux-manager/api-docs
+```
 
 ## Data Model
-
 ### **Digital User Entity Attributes**
 - `id`: Unique identifier for the digital user.
 - `identityProviderInformation`: Contains details about the identity provider (subject, identity provider, tenant ID).
 - `personalInformation`: Personal details such as full name, email address, and birth date.
 - `contactMediumList`: List of contact mediums (e.g., phone, email, geographic address).
 - `assets`: List of assets associated with the digital user.
-
 ### **Asset Entity Attributes**
 - `id`: Unique identifier for the asset.
 - `externalId`: ID from the source system (e.g., book-manager, game-manager).
@@ -73,62 +123,51 @@ The project follows a clean architecture with clear separation of concerns:
 - `createdAt`: Record creation timestamp.
 - `updatedAt`: Last update timestamp.
 
-
-## Getting Started
-
+## Setup and Installation
 ### Prerequisites
 
 - Java 17+
-- Maven
-- MongoDB or another compatible NoSQL database
+- Maven 3.6+
+- PostgreSQL 15+
 - Docker (optional, for containerized deployment)
 
-### Configuration
-
-Create an `application.properties` or `application.yml` file with the following properties:
-
-```properties
-# MongoDB configuration
-spring.data.mongodb.uri=mongodb://localhost:27017/dux-manager
+### Local Development
+ - Step 1: Clone the repository
 ```
-
-### Building
-
-```bash
-mvn clean package
+git clone https://github.com/FPetronilho/dux-manager.git
+cd dux-manager
 ```
-
-### Running Locally
-
+- Step 2: Configure application properties - Create a .env file to setup environment variables or update dux-manager-application/src/main/resources/application-local.yaml.
+- Step 3: Build the project
+```
+mvn clean install
+```
+- Step 4: Run the application
 ```bash
 java -jar dux-manager.jar
 ```
 
 ### Docker Setup
- 
- The dux-manager application can now be containerized using Docker. To run the application in Docker, follow these steps:
- - Step 1: Create docker network -  As Dux Manager is designed to work with other microservices, create a docker network so that all microservices can communicate. Run the following command:
+- Step 1: Create a docker network -  As DUX Manager is meant to be used as a support to other microservices, create a network so that these microservices can communicate with DUX Manager.
 ```
-docker network create shared-network
+docker network create your-network
 ```
- - Step 2: Build the Docker Image - 
- Run the following command to build the Docker image:
- ```
- docker-compose up --build
- ```
- 
-  - Step 3: Start the Containers - 
- Start the containers using the following command:
- ```
- docker-compose up
- ```
- 
- The dux-manager service will be accessible at http://localhost:8081.
+- Step 2: Set environment variables in .env file
+- Step 3: Build and run with Docker compose
+```
+cd resources/docker
+docker-compose up -d
+``` 
+The dux-manager service will be accessible at https://localhost:8443.
+
+## Authentication
+This application uses OAuth 2.0 with JWT for authentication and authorization. To access the protected endpoints, you must include a valid JWT token in the Authorization header:
+```
+Authorization: Bearer <your_jwt_token>
+```
 
 ## Error Handling
-
 The service provides structured error responses with the following format:
-
 ```json
 {
   "code": "E-002",
@@ -137,63 +176,24 @@ The service provides structured error responses with the following format:
   "message": "Asset your-asset-id not found."
 }
 ```
-
 Common error codes:
-- `E-001`: Internal server error
 - `E-002`: Resource not found
 - `E-003`: Resource already exists
 - `E-007`: Parameter validation error
 
 ## Validation
-
 The service includes comprehensive validation for all inputs:
 - Digital user identity provider information validation.
 - Asset external ID and type validation.
 - Date format validation.
 - Query parameter validation.
 
-## Development
 
-### Tech Stack
-
-- Java 17
-- Spring Boot
-- Spring Data MongoDB
-- Jakarta Validation
-- Lombok
-- MapStruct
-- Logging with SLF4J
-- MongoDB
-- Maven
-- Docker
-- OAuth2/JWT authentication
-- Swagger documentation
-- HTTPS enabled via SSL certificates
-
-### Project Structure
-
-```
-com.tracktainment.duxmanager
-├── api                    # API interfaces
-├── controller             # REST controllers
-├── dataprovider           # Data provider implementations
-├── domain                 # Domain models
-├── document               # MongoDB document models
-├── dto                    # Data Transfer Objects
-├── exception              # Exception handling
-├── mapper                 # Object mappers
-├── usecases               # Business logic implementation
-└── util                   # Utility classes
-```
-
-### Next Features
-
-- Unit testing;
+## Next Features
 - Database encryption;
 - CI/CD pipeline.
 
 ## Potential Tracktainment Upgrades
-
 - **Review Microservice**: A microservice to handle reviews of books, games and movies.
 - **Recommendation Microservice**: A microservice to handle books, games and movies recommendations based on what the user has consumed so far.
 - **Notification Microservice** : A microservice to send notifications to users about recommendations.
