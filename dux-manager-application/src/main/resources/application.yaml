@@ -24,6 +24,9 @@ logging.level:
   org.springframework: INFO
   com.portfolio: INFO
 
+encryption:
+  password: ${ENCRYPTION_PASSWORD}
+
 ###################  MongoDB configuration  ###################
 spring.data.mongodb:
   uri: ${MONGO_URI}

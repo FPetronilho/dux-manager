@@ -1,6 +1,7 @@
 package com.tracktainment.duxmanager.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.tracktainment.duxmanager.annotation.Encrypted;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -38,12 +39,15 @@ public class DigitalUser extends BaseObject {
     @Schema(description = "Identity provider information")
     public static class IdentityProviderInformation {
 
+        @Encrypted
         @Schema(description = "Subject identifier from identity provider", example = "auth2|123456789")
         private String subject;
 
+        @Encrypted
         @Schema(description = "Identity provider")
         private IdentityProvider identityProvider;
 
+        @Encrypted
         @Schema(description = "Tenant identifier", example = "tenant123")
         private String tenantId;
 
@@ -146,32 +150,41 @@ public class DigitalUser extends BaseObject {
         public static class Characteristic {
 
             // Phone
+            @Encrypted
             @Schema(description = "Country code", example = "+1")
             private String countryCode;
 
+            @Encrypted
             @Schema(description = "Phone number", example = "555-123-4567")
             private String phoneNumber;
 
             // Email
+            @Encrypted
             @Schema(description = "Email address", example = "john.doe@example.com")
             private String emailAddress;
 
             // Geographic address
+            @Encrypted
             @Schema(description = "Country", example = "United States")
             private String country;
 
+            @Encrypted
             @Schema(description = "City", example = "New York")
             private String city;
 
+            @Encrypted
             @Schema(description = "State or province", example = "NY")
             private String stateOrProvince;
 
+            @Encrypted
             @Schema(description = "Postal code", example = "10001")
             private String postalCode;
 
+            @Encrypted
             @Schema(description = "Street address line 1", example = "123 Main St")
             private String street1;
 
+            @Encrypted
             @Schema(description = "Street address line 2", example = "Apt 4B")
             private String street2;
         }
