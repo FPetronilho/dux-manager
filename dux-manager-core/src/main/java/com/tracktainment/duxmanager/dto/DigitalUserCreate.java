@@ -157,7 +157,7 @@ public class DigitalUserCreate {
 
             // Phone
             @Pattern(regexp = Constants.COUNTRY_CODE_REGEX, message = Constants.COUNTRY_CODE_INVALID_MSG)
-            @Schema(description = "Country code", example = "+1")
+            @Schema(description = "Country code", example = "+32")
             private String countryCode;
 
             @Pattern(regexp = Constants.PHONE_NUMBER_REGEX, message = Constants.PHONE_NUMBER_INVALID_MSG)

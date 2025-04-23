@@ -24,6 +24,10 @@ logging.level:
   org.springframework: INFO
   com.portfolio: INFO
 
+encryption:
+  secret-key: ${ENCRYPTION_SECRET_KEY}
+  salt: ${ENCRYPTION_SALT}
+
 ###################  MongoDB configuration  ###################
 spring.data.mongodb:
   uri: ${MONGO_URI}

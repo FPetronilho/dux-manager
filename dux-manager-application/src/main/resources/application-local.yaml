@@ -1,5 +1,0 @@
-###################  Microservice base configuration  ###################
-spring.application.environment: local
-
-###################  MongoDB configuration  ###################
-spring.data.mongodb.uri: mongodb://localhost:27017/DuxManager
