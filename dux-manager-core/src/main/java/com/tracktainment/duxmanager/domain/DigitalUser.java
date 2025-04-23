@@ -39,15 +39,12 @@ public class DigitalUser extends BaseObject {
     @Schema(description = "Identity provider information")
     public static class IdentityProviderInformation {
 
-        @Encrypted
         @Schema(description = "Subject identifier from identity provider", example = "auth2|123456789")
         private String subject;
 
-        @Encrypted
         @Schema(description = "Identity provider")
         private IdentityProvider identityProvider;
 
-        @Encrypted
         @Schema(description = "Tenant identifier", example = "tenant123")
         private String tenantId;
 
@@ -84,21 +81,27 @@ public class DigitalUser extends BaseObject {
     @Schema(description = "Personal information")
     public static class PersonalInformation {
 
+        @Encrypted
         @Schema(description = "Full name", example = "John Michael Doe")
         private String fullName;
 
+        @Encrypted
         @Schema(description = "First name", example = "John")
         private String firstName;
 
+        @Encrypted
         @Schema(description = "Middle name", example = "Michael")
         private String middleName;
 
+        @Encrypted
         @Schema(description = "Last name", example = "Doe")
         private String lastName;
 
+        @Encrypted
         @Schema(description = "Nickname", example = "Johnny")
         private String nickname;
 
+        @Encrypted
         @Schema(description = "Birth date", example = "1980-05-15")
         private LocalDate birthDate;
     }

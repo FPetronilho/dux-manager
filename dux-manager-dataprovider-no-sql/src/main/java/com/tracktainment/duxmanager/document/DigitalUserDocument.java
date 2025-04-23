@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Encrypted;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ import java.util.List;
 @Document(collection = "digital-users")
 public class DigitalUserDocument extends BaseDocument {
 
-    @Encrypted
     @Indexed(unique = true)
     private String id;
 

@@ -1,7 +1,6 @@
 package com.tracktainment.duxmanager.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.tracktainment.duxmanager.annotation.Encrypted;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -15,7 +14,6 @@ import lombok.experimental.SuperBuilder;
 @Schema(description = "Asset information")
 public class Asset extends BaseObject {
 
-    @Encrypted
     @Schema(description = "External ID from the source system", example = "123e4567-e89b-12d3-a456-426614174000")
     private String externalId;
 
