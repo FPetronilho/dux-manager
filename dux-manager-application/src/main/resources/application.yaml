@@ -25,7 +25,8 @@ logging.level:
   com.portfolio: INFO
 
 encryption:
-  password: ${ENCRYPTION_PASSWORD}
+  secret-key: ${ENCRYPTION_SECRET_KEY}
+  salt: ${ENCRYPTION_SALT}
 
 ###################  MongoDB configuration  ###################
 spring.data.mongodb:
