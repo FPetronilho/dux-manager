@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -96,7 +95,7 @@ public class DigitalUser extends BaseObject {
         private String nickname;
 
         @Schema(description = "Birth date", example = "1980-05-15")
-        private LocalDate birthDate;
+        private String birthDate;
     }
 
     @AllArgsConstructor

@@ -8,7 +8,9 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.AfterConvertEvent;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Configuration
@@ -47,26 +49,45 @@ public class MongoDecryptionConfig {
                 return;
             }
 
-            for (Field field : clazz.getDeclaredFields()) {
-                field.setAccessible(true);
+            // Process fields in current class and all superclasses
+            Class<?> currentClass = clazz;
+            while (currentClass != null && currentClass != Object.class) {
+                for (Field field : currentClass.getDeclaredFields()) {
+                    field.setAccessible(true);
 
-                try {
-                    if (field.isAnnotationPresent(Encrypted.class)) {
-                        Object value = field.get(object);
-
-                        if (value instanceof String) {
-                            String decryptedValue = encryptionService.decrypt((String) value);
-                            field.set(object, decryptedValue);
-                        }
-                    } else {
+                    try {
                         Object fieldValue = field.get(object);
-                        if (fieldValue != null && !isBasicType(fieldValue.getClass())) {
-                            processDecryptedFields(fieldValue, processedObjects);
+                        if (fieldValue == null) {
+                            continue;
                         }
+
+                        if (field.isAnnotationPresent(Encrypted.class) && fieldValue instanceof String) {
+                            // Decrypt string fields only
+                            String decryptedValue = encryptionService.decrypt((String) fieldValue);
+                            field.set(object, decryptedValue);
+                        } else {
+                            // Process nested objects
+                            if (fieldValue instanceof Collection) {
+                                for (Object item : (Collection<?>) fieldValue) {
+                                    if (item != null && !isBasicType(item.getClass())) {
+                                        processDecryptedFields(item, processedObjects);
+                                    }
+                                }
+                            } else if (fieldValue instanceof Map) {
+                                for (Object value : ((Map<?, ?>) fieldValue).values()) {
+                                    if (value != null && !isBasicType(value.getClass())) {
+                                        processDecryptedFields(value, processedObjects);
+                                    }
+                                }
+                            } else if (!isBasicType(fieldValue.getClass())) {
+                                processDecryptedFields(fieldValue, processedObjects);
+                            }
+                        }
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException("Error accessing field for decryption", e);
                     }
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException("Error accessing field for decryption", e);
                 }
+                currentClass = currentClass.getSuperclass();
             }
         }
 

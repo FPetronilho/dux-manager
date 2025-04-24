@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +66,7 @@ public class DigitalUserDocument extends BaseDocument {
         private String nickname;
 
         @Encrypted
-        private LocalDate birthDate;
+        private String birthDate;
     }
 
     @AllArgsConstructor
