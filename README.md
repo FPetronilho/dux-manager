@@ -31,11 +31,14 @@ The project follows a clean architecture with clear separation of concerns:
 
 ## Features
 - Create, read and delete operations for digital users and assets.
-- Advanced filtering and search capabilities
-- OAuth2 security with JWT
-- Swagger/OpenAPI documentation
-- Comprehensive validation and exception handling
-- Comprehensive unit testing
+- Advanced filtering and search capabilities;
+- MongoDB field-level encryption;
+- Comprehensive validation and error handling;
+- Design Patterns integration (DTO, Builder, Factory and Code Generation);
+- Docker containerization for deployment;
+- OAuth2/JWT authentication;
+- Swagger documentation;
+- Comprehensive unit testing with JUnit & Mockito with over 85% line coverage.
 
 ## Tech Stack
 - Java 17
@@ -190,7 +193,6 @@ The service includes comprehensive validation for all inputs:
 
 
 ## Next Features
-- Database encryption;
 - CI/CD pipeline.
 
 ## Potential Tracktainment Upgrades
