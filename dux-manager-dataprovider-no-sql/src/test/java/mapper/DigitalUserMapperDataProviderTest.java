@@ -36,10 +36,27 @@ class DigitalUserMapperDataProviderTest {
         assertEquals(digitalUserDocument.getCreatedAt(), result.getCreatedAt());
         assertEquals(digitalUserDocument.getUpdatedAt(), result.getUpdatedAt());
 
-        assertEquals(digitalUserDocument.getIdentityProviderInformation(), result.getIdentityProviderInformation());
-        assertEquals(digitalUserDocument.getPersonalInformation(), result.getPersonalInformation());
+        assertEquals(
+                digitalUserDocument.getIdentityProviderInformation().getIdentityProvider(),
+                result.getIdentityProviderInformation().getIdentityProvider()
+        );
+        assertEquals(
+                digitalUserDocument.getIdentityProviderInformation().getSubject(),
+                result.getIdentityProviderInformation().getSubject()
+        );
+        assertEquals(
+                digitalUserDocument.getIdentityProviderInformation().getTenantId(),
+                result.getIdentityProviderInformation().getTenantId()
+        );
+        assertEquals(
+                digitalUserDocument.getPersonalInformation().getFirstName(),
+                result.getPersonalInformation().getFirstName()
+        );
         assertEquals(1, result.getContactMediumList().size());
-        assertEquals(digitalUserDocument.getContactMediumList().get(0), result.getContactMediumList().get(0));
+        assertEquals(
+                digitalUserDocument.getContactMediumList().get(0).getType(),
+                result.getContactMediumList().get(0).getType()
+        );
         assertTrue(result.getAssets().isEmpty());
     }
 

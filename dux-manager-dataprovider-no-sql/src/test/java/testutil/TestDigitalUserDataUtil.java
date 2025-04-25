@@ -3,7 +3,6 @@ package testutil;
 import com.tracktainment.duxmanager.domain.DigitalUser;
 import com.tracktainment.duxmanager.dto.DigitalUserCreate;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +21,7 @@ public class TestDigitalUserDataUtil {
                         .fullName("John Doe")
                         .firstName("John")
                         .lastName("Doe")
-                        .birthDate(LocalDate.of(1990, 1, 1))
+                        .birthDate("1990-01-01")
                         .build()
                 )
                 .contactMediumList(Collections.singletonList(
@@ -53,7 +52,7 @@ public class TestDigitalUserDataUtil {
                         .fullName("John Doe")
                         .firstName("John")
                         .lastName("Doe")
-                        .birthDate(LocalDate.of(1990, 1, 1))
+                        .birthDate("1990-01-01")
                         .build()
                 )
                 .contactMediumList(Collections.singletonList(

@@ -14,27 +14,27 @@ public class TestDigitalUserDocumentDataUtil {
         return DigitalUserDocument.builder()
                 .id("fd3e4567-e89b-12d3-a456-426614174008")
                 .identityProviderInformation(
-                        DigitalUser.IdentityProviderInformation.builder()
+                        DigitalUserDocument.IdentityProviderInformation.builder()
                         .subject("auth2|123456")
                         .identityProvider(DigitalUser.IdentityProviderInformation.IdentityProvider.KEY_CLOAK)
                         .tenantId("tenant1")
                         .build()
                 )
                 .personalInformation(
-                        DigitalUser.PersonalInformation.builder()
+                        DigitalUserDocument.PersonalInformation.builder()
                                 .fullName("John Doe")
                                 .firstName("John")
                                 .lastName("Doe")
-                                .birthDate(LocalDate.of(1990, 1, 1))
+                                .birthDate("1990-01-01")
                                 .build()
                 )
                 .contactMediumList(
                         Collections.singletonList(
-                                DigitalUser.ContactMedium.builder()
+                                DigitalUserDocument.ContactMedium.builder()
                                         .type(DigitalUser.ContactMedium.Type.EMAIL)
                                         .preferred(true)
                                         .characteristic(
-                                                DigitalUser.ContactMedium.Characteristic.builder()
+                                                DigitalUserDocument.ContactMedium.Characteristic.builder()
                                                         .emailAddress("john.doe@example.com")
                                                         .build()
                                         )

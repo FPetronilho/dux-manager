@@ -27,30 +27,30 @@ class DigitalUserDocumentTest {
         LocalDateTime createdAt = LocalDateTime.now();
         LocalDateTime updatedAt = LocalDateTime.now().plusDays(1);
 
-        DigitalUser.IdentityProviderInformation idpInfo = DigitalUser.IdentityProviderInformation.builder()
+        DigitalUserDocument.IdentityProviderInformation idpInfo = DigitalUserDocument.IdentityProviderInformation.builder()
                 .subject("auth2|123456")
                 .identityProvider(DigitalUser.IdentityProviderInformation.IdentityProvider.KEY_CLOAK)
                 .tenantId("tenant1")
                 .build();
 
-        DigitalUser.PersonalInformation personalInfo = DigitalUser.PersonalInformation.builder()
+        DigitalUserDocument.PersonalInformation personalInfo = DigitalUserDocument.PersonalInformation.builder()
                 .fullName("John Doe")
                 .firstName("John")
                 .lastName("Doe")
-                .birthDate(LocalDate.of(1990, 1, 1))
+                .birthDate("1990-01-01")
                 .build();
 
-        DigitalUser.ContactMedium.Characteristic emailChar = DigitalUser.ContactMedium.Characteristic.builder()
+        DigitalUserDocument.ContactMedium.Characteristic emailChar = DigitalUserDocument.ContactMedium.Characteristic.builder()
                 .emailAddress("john.doe@example.com")
                 .build();
 
-        DigitalUser.ContactMedium contactMedium = DigitalUser.ContactMedium.builder()
+        DigitalUserDocument.ContactMedium contactMedium = DigitalUserDocument.ContactMedium.builder()
                 .type(DigitalUser.ContactMedium.Type.EMAIL)
                 .preferred(true)
                 .characteristic(emailChar)
                 .build();
 
-        List<DigitalUser.ContactMedium> contactMediumList = new ArrayList<>();
+        List<DigitalUserDocument.ContactMedium> contactMediumList = new ArrayList<>();
         contactMediumList.add(contactMedium);
 
         Asset asset = Asset.builder()
@@ -109,17 +109,17 @@ class DigitalUserDocumentTest {
         LocalDateTime createdAt = LocalDateTime.now();
         LocalDateTime updatedAt = LocalDateTime.now().plusDays(1);
 
-        DigitalUser.IdentityProviderInformation idpInfo = DigitalUser.IdentityProviderInformation.builder()
+        DigitalUserDocument.IdentityProviderInformation idpInfo = DigitalUserDocument.IdentityProviderInformation.builder()
                 .subject("auth2|123456")
                 .identityProvider(DigitalUser.IdentityProviderInformation.IdentityProvider.KEY_CLOAK)
                 .tenantId("tenant1")
                 .build();
 
-        DigitalUser.PersonalInformation personalInfo = DigitalUser.PersonalInformation.builder()
+        DigitalUserDocument.PersonalInformation personalInfo = DigitalUserDocument.PersonalInformation.builder()
                 .fullName("John Doe")
                 .build();
 
-        List<DigitalUser.ContactMedium> contactMediumList = new ArrayList<>();
+        List<DigitalUserDocument.ContactMedium> contactMediumList = new ArrayList<>();
         List<Asset> assets = new ArrayList<>();
 
         // Act
@@ -155,15 +155,15 @@ class DigitalUserDocumentTest {
         ObjectId dbId = new ObjectId();
         LocalDateTime now = LocalDateTime.now();
 
-        DigitalUser.IdentityProviderInformation idpInfo = DigitalUser.IdentityProviderInformation.builder()
+        DigitalUserDocument.IdentityProviderInformation idpInfo = DigitalUserDocument.IdentityProviderInformation.builder()
                 .subject("auth0|123456")
                 .build();
 
-        DigitalUser.PersonalInformation personalInfo = DigitalUser.PersonalInformation.builder()
+        DigitalUserDocument.PersonalInformation personalInfo = DigitalUserDocument.PersonalInformation.builder()
                 .fullName("John Doe")
                 .build();
 
-        List<DigitalUser.ContactMedium> contactMediumList = new ArrayList<>();
+        List<DigitalUserDocument.ContactMedium> contactMediumList = new ArrayList<>();
         List<Asset> assets = new ArrayList<>();
 
         // Act

@@ -105,7 +105,7 @@ public class DigitalUserCreate {
 
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         @Schema(description = "Birth date", example = "1980-05-15")
-        private LocalDate birthDate;
+        private String birthDate;
     }
 
     @AllArgsConstructor

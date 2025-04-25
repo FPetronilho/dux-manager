@@ -3,10 +3,7 @@ package com.tracktainment.duxmanager.document;
 import com.tracktainment.duxmanager.annotation.Encrypted;
 import com.tracktainment.duxmanager.domain.Asset;
 import com.tracktainment.duxmanager.domain.DigitalUser;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -37,6 +34,7 @@ public class DigitalUserDocument extends BaseDocument {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
+    @Builder
     @EqualsAndHashCode
     public static class IdentityProviderInformation {
         private String subject;
@@ -47,6 +45,7 @@ public class DigitalUserDocument extends BaseDocument {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
+    @Builder
     @EqualsAndHashCode
     public static class PersonalInformation {
 
@@ -72,6 +71,7 @@ public class DigitalUserDocument extends BaseDocument {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
+    @Builder
     @EqualsAndHashCode
     public static class ContactMedium {
 
@@ -83,6 +83,7 @@ public class DigitalUserDocument extends BaseDocument {
         @AllArgsConstructor
         @NoArgsConstructor
         @Data
+        @Builder
         @EqualsAndHashCode
         public static class Characteristic {
 

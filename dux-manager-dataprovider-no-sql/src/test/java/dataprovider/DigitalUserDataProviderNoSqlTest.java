@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import testutil.TestDigitalUserDataUtil;
+import testutil.TestDigitalUserDocumentDataUtil;
 
 import java.util.ArrayList;
 
@@ -52,14 +53,7 @@ class DigitalUserDataProviderNoSqlTest {
     void setUp() {
         digitalUserCreate = TestDigitalUserDataUtil.createTestDigitalUserCreate();
         digitalUser = TestDigitalUserDataUtil.createTestDigitalUser();
-
-        // Setup DigitalUserDocument
-        digitalUserDocument = new DigitalUserDocument();
-        digitalUserDocument.setId(digitalUser.getId());
-        digitalUserDocument.setIdentityProviderInformation(digitalUser.getIdentityProviderInformation());
-        digitalUserDocument.setPersonalInformation(digitalUser.getPersonalInformation());
-        digitalUserDocument.setContactMediumList(digitalUser.getContactMediumList());
-        digitalUserDocument.setAssets(new ArrayList<>());
+        digitalUserDocument = TestDigitalUserDocumentDataUtil.createTestDigitalUserDocument();
     }
 
     @Test

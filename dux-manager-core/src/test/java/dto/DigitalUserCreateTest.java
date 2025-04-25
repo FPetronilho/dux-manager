@@ -26,7 +26,7 @@ class DigitalUserCreateTest {
                 .middleName("Michael")
                 .lastName("Doe")
                 .nickname("Johnny")
-                .birthDate(LocalDate.of(1990, 1, 1))
+                .birthDate("1990-01-01")
                 .build();
 
         DigitalUserCreate.ContactMedium.Characteristic emailChar = DigitalUserCreate.ContactMedium.Characteristic.builder()
@@ -143,7 +143,7 @@ class DigitalUserCreateTest {
         String middleName = "Michael";
         String lastName = "Doe";
         String nickname = "Johnny";
-        LocalDate birthDate = LocalDate.of(1990, 1, 1);
+        String birthDate = "1990-01-01";
 
         // Act
         DigitalUserCreate.PersonalInformation personalInfo = DigitalUserCreate.PersonalInformation.builder()
