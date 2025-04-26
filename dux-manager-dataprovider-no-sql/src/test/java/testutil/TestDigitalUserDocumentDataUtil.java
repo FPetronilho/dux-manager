@@ -12,7 +12,7 @@ public class TestDigitalUserDocumentDataUtil {
 
     public static DigitalUserDocument createTestDigitalUserDocument() {
         return DigitalUserDocument.builder()
-                .id("fd3e4567-e89b-12d3-a456-426614174008")
+                .id("223e4567-e89b-12d3-a456-426614174008")
                 .identityProviderInformation(
                         DigitalUserDocument.IdentityProviderInformation.builder()
                         .subject("auth2|123456")

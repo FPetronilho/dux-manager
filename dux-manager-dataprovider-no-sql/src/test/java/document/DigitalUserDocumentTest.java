@@ -1,5 +1,6 @@
 package document;
 
+import com.tracktainment.duxmanager.annotation.Encrypted;
 import com.tracktainment.duxmanager.document.BaseDocument;
 import com.tracktainment.duxmanager.document.DigitalUserDocument;
 import com.tracktainment.duxmanager.domain.Asset;
@@ -8,6 +9,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import testutil.TestAssetDataUtil;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -295,9 +297,6 @@ class DigitalUserDocumentTest {
 
     @Test
     void shouldHandleMongoIndexAnnotation() {
-        // This test verifies that the @Indexed annotation is present on the id field
-        // Note: This is a reflective test to check the presence of annotations
-
         try {
             // Check that the id field has the @Indexed annotation
             java.lang.reflect.Field idField = DigitalUserDocument.class.getDeclaredField("id");
@@ -314,13 +313,30 @@ class DigitalUserDocumentTest {
 
     @Test
     void shouldHaveCorrectCollectionName() {
-        // This test verifies that the @Document annotation specifies the correct collection name
-
         org.springframework.data.mongodb.core.mapping.Document documentAnnotation =
                 DigitalUserDocument.class.getAnnotation(org.springframework.data.mongodb.core.mapping.Document.class);
 
         assertNotNull(documentAnnotation, "DigitalUserDocument should have @Document annotation");
         assertEquals("digital-users", documentAnnotation.collection(),
                 "DigitalUserDocument should map to 'digital-users' collection");
+    }
+
+    @Test
+    void shouldHaveEncryptedAnnotationOnSensitiveFields() throws Exception {
+        Field fullNameField = DigitalUserDocument.PersonalInformation.class.getDeclaredField("fullName");
+        Field firstNameField = DigitalUserDocument.PersonalInformation.class.getDeclaredField("firstName");
+
+        assertTrue(fullNameField.isAnnotationPresent(Encrypted.class),
+                "fullName field should be annotated with @Encrypted");
+        assertTrue(firstNameField.isAnnotationPresent(Encrypted.class),
+                "firstName field should be annotated with @Encrypted");
+
+        Field emailAddressField = DigitalUserDocument.ContactMedium.Characteristic.class.getDeclaredField("emailAddress");
+        Field phoneNumberField = DigitalUserDocument.ContactMedium.Characteristic.class.getDeclaredField("phoneNumber");
+
+        assertTrue(emailAddressField.isAnnotationPresent(Encrypted.class),
+                "emailAddress field should be annotated with @Encrypted");
+        assertTrue(phoneNumberField.isAnnotationPresent(Encrypted.class),
+                "phoneNumber field should be annotated with @Encrypted");
     }
 }

@@ -21,7 +21,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import testutil.TestDigitalUserDataUtil;
 import testutil.TestDigitalUserDocumentDataUtil;
 
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
