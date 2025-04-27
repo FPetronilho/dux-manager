@@ -1,6 +1,7 @@
-package com.tracktainment.duxmanager.dataprovider;
+package com.tracktainment.duxmanager.dataprovider.impl;
 
 import com.mongodb.BasicDBObject;
+import com.tracktainment.duxmanager.dataprovider.AssetDataProvider;
 import com.tracktainment.duxmanager.document.DigitalUserDocument;
 import com.tracktainment.duxmanager.domain.Asset;
 import com.tracktainment.duxmanager.dto.AssetCreate;

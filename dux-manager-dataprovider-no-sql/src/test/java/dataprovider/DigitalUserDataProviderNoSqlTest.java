@@ -1,7 +1,7 @@
 package dataprovider;
 
 import com.mongodb.client.result.DeleteResult;
-import com.tracktainment.duxmanager.dataprovider.DigitalUserDataProviderNoSql;
+import com.tracktainment.duxmanager.dataprovider.impl.DigitalUserDataProviderNoSql;
 import com.tracktainment.duxmanager.document.DigitalUserDocument;
 import com.tracktainment.duxmanager.domain.DigitalUser;
 import com.tracktainment.duxmanager.dto.DigitalUserCreate;

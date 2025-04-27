@@ -3,12 +3,15 @@ spring:
   application:
     name: dux-manager
     version: 0.0.1-SNAPSHOT
-  security:
+
+###################  Security configuration  ###################
+spring.security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: ${JWK_SET_URI}
 
+###################  Server configuration  ###################
 server:
   port: ${SERVER_PORT}
   servlet.context-path: /${spring.application.name}
@@ -19,16 +22,34 @@ server:
     key-store-type: PKCS12
     key-alias: ${KEY_ALIAS}
 
-logging.level:
-  root: INFO
-  org.springframework: INFO
-  com.portfolio: INFO
+###################  Logging configuration  ###################
+logging:
+  payload.maxLength: 5000
+  hide:
+    fields:
+      - "$.headers.transaction-id"
+      - "$.headers.trace-id"
+      - "$.headers.postman-token"
+      - "$.attributes"
+  mask:
+    tag: "<MASKED>"
+    fields:
+      - "$.headers.authorization"
+      - "$.payload.personalInformation.*"
+      - "$.payload.contactMediumList.[*].characteristic.*"
 
-encryption:
-  secret-key: ${ENCRYPTION_SECRET_KEY}
-  salt: ${ENCRYPTION_SALT}
+###################  Swagger configuration  ###################
+springdoc:
+  api-docs.path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
 
 ###################  MongoDB configuration  ###################
 spring.data.mongodb:
   uri: ${MONGO_URI}
   auto-index-creation: true
+
+encryption:
+  secret-key: ${ENCRYPTION_SECRET_KEY}
+  salt: ${ENCRYPTION_SALT}

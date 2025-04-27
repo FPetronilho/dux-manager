@@ -1,6 +1,7 @@
-package com.tracktainment.duxmanager.dataprovider;
+package com.tracktainment.duxmanager.dataprovider.impl;
 
 import com.mongodb.client.result.DeleteResult;
+import com.tracktainment.duxmanager.dataprovider.DigitalUserDataProvider;
 import com.tracktainment.duxmanager.document.DigitalUserDocument;
 import com.tracktainment.duxmanager.domain.DigitalUser;
 import com.tracktainment.duxmanager.dto.DigitalUserCreate;

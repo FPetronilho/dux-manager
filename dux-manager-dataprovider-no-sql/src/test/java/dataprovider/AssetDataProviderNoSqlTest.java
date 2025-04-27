@@ -1,7 +1,7 @@
 package dataprovider;
 
-import com.tracktainment.duxmanager.dataprovider.AssetDataProviderNoSql;
-import com.tracktainment.duxmanager.dataprovider.DigitalUserDataProviderNoSql;
+import com.tracktainment.duxmanager.dataprovider.impl.AssetDataProviderNoSql;
+import com.tracktainment.duxmanager.dataprovider.impl.DigitalUserDataProviderNoSql;
 import com.tracktainment.duxmanager.document.DigitalUserDocument;
 import com.tracktainment.duxmanager.domain.Asset;
 import com.tracktainment.duxmanager.dto.AssetCreate;
