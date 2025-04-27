@@ -1,5 +1,6 @@
 # Dux Manager Microservice
-The Digital User Context (DUX) Manager microservice is part of the Tracktainment application, which is designed to track books, movies, and games consumed by users. This microservice is responsible for managing digital users and their associated assets (e.g., books, games, movies). It uses MongoDB as the primary database and provides REST APIs for external clients.
+The Digital User Context (DUX) Manager microservice is part of the Tracktainment application, which is designed to track books, movies, and games consumed by users.  
+This microservice is responsible for managing digital users and their associated assets (e.g., books, games, movies). It uses MongoDB as the primary database and provides REST APIs for external clients.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -16,11 +17,13 @@ The Digital User Context (DUX) Manager microservice is part of the Tracktainment
 - [Authentication](#authentication)
 - [Error Handling](#error-handling)
 - [Validation](#validation)
+- [Logging](#logging)
 - [Next Features](#next-features)
 - [Potential Tracktainment Upgrades](#potential-tracktainment-upgrades)
 
 ## Overview
-DUX Manager is a microservice application that provides RESTful APIs for managing digital users and their assets. It follows clean architecture principles with a clear separation of concerns, making it maintainable, testable, and scalable. The application allows users to create, read and delete digital users and their assets.
+DUX Manager is a microservice application that provides RESTful APIs for managing digital users and their assets. It follows clean architecture principles with a clear separation of concerns, making it maintainable, testable, and scalable.  
+The application allows users to create, read and delete digital users and their assets.
 
 ## Architecture
 The project follows a clean architecture with clear separation of concerns:
@@ -38,7 +41,10 @@ The project follows a clean architecture with clear separation of concerns:
 - Docker containerization for deployment;
 - OAuth2/JWT authentication;
 - Swagger documentation;
-- Comprehensive unit testing with JUnit & Mockito with over 85% line coverage.
+- Comprehensive unit testing with JUnit & Mockito with over 85% line coverage;
+- Code analysis performed against SonarQube using Jacoco;
+- HTTP requests/responses logging;
+- Traceability, Observability and OpenTelemetry integration using provided logs.
 
 ## Tech Stack
 - Java 17
@@ -53,7 +59,9 @@ The project follows a clean architecture with clear separation of concerns:
 - Docker
 - Swagger/OpenAPI
 - HTTPS enabled via SSL certificates
+- HTTP request/response logging 
 - JUnit 5 & Mockito
+- SonarQube & Jacoco
 
 ### Project Structure
 
@@ -140,7 +148,8 @@ https://localhost:8443/dux-manager/api-docs
 git clone https://github.com/FPetronilho/dux-manager.git
 cd dux-manager
 ```
-- Step 2: Configure application properties - Create a .env file to setup environment variables or update dux-manager-application/src/main/resources/application-local.yaml.
+- Step 2: Configure application properties  
+Create a .env file to setup environment variables or update dux-manager-application/src/main/resources/application-local.yaml.
 - Step 3: Build the project
 ```
 mvn clean install
@@ -151,7 +160,8 @@ java -jar dux-manager.jar
 ```
 
 ### Docker Setup
-- Step 1: Create a docker network -  As DUX Manager is meant to be used as a support to other microservices, create a network so that these microservices can communicate with DUX Manager.
+- Step 1: Create a docker network  
+As DUX Manager is meant to be used as a support to other microservices, create a network so that these microservices can communicate with DUX Manager.
 ```
 docker network create your-network
 ```
@@ -164,10 +174,8 @@ docker-compose up -d
 The dux-manager service will be accessible at https://localhost:8443.
 
 ## Authentication
-This application uses OAuth 2.0 with JWT for authentication and authorization. To access the protected endpoints, you must include a valid JWT token in the Authorization header:
-```
-Authorization: Bearer <your_jwt_token>
-```
+This application uses OAuth 2.0 with JWT for authentication and authorization.  
+This capability is provided using auth8 microservice from Ricardo Petronilho (https://github.com/RicardoPetronilho98/auth8/tree/develop). Please refer to documentation in order to setup the service.
 
 ## Error Handling
 The service provides structured error responses with the following format:
@@ -190,6 +198,18 @@ The service includes comprehensive validation for all inputs:
 - Asset external ID and type validation.
 - Date format validation.
 - Query parameter validation.
+
+## Logging
+- Enhanced Traceability:
+  - Automatic injection of transactionId, traceId, and log point into every log event.
+  - Capture execution timestamps and durations with nanosecond precision.
+- Observability-Ready:
+  - Structured logs for seamless integration into ELK, Grafana Loki, AWS CloudWatch, and OpenTelemetry.
+  - Designed for correlation of distributed logs across microservices.
+- Mask sensitive fields (e.g., email, tokens, phone numbers) dynamically.
+- Hide fields completely from logs when needed.
+
+This capability is provided using a logging library from Ricardo Petronilho (https://github.com/RicardoPetronilho98/logging). Please refer to documentation in order to setup the library.
 
 
 ## Next Features
