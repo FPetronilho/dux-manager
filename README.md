@@ -64,7 +64,6 @@ The project follows a clean architecture with clear separation of concerns:
 - SonarQube & Jacoco
 
 ### Project Structure
-
 ```
 dux-manager
 ├── dux-manager-application            # Spring Boot application module
@@ -97,7 +96,6 @@ dux-manager
 ```
 
 ## API Endpoints
-
 | Method   | Endpoint                                      | Description                                                      |
 |----------|-----------------------------------------------|------------------------------------------------------------------|
 | POST     | `/api/v1/digitalUsers`                        | Create a new digital user                                        |
@@ -136,37 +134,36 @@ https://localhost:8443/dux-manager/api-docs
 
 ## Setup and Installation
 ### Prerequisites
-
 - Java 17+
 - Maven 3.6+
 - PostgreSQL 15+
 - Docker (optional, for containerized deployment)
 
 ### Local Development
- - Step 1: Clone the repository
+ - Step 1 - Clone the repository
 ```
 git clone https://github.com/FPetronilho/dux-manager.git
 cd dux-manager
 ```
-- Step 2: Configure application properties  
+- Step 2 - Configure application properties:  
 Create a .env file to setup environment variables or update dux-manager-application/src/main/resources/application-local.yaml.
-- Step 3: Build the project
+- Step 3 - Build the project
 ```
 mvn clean install
 ```
-- Step 4: Run the application
+- Step 4 - Run the application
 ```bash
 java -jar dux-manager.jar
 ```
 
 ### Docker Setup
-- Step 1: Create a docker network  
+- Step 1 - Create a docker network:  
 As DUX Manager is meant to be used as a support to other microservices, create a network so that these microservices can communicate with DUX Manager.
 ```
 docker network create your-network
 ```
-- Step 2: Set environment variables in .env file
-- Step 3: Build and run with Docker compose
+- Step 2 - Set environment variables in .env file
+- Step 3 - Build and run with Docker compose
 ```
 cd resources/docker
 docker-compose up -d
@@ -210,7 +207,6 @@ The service includes comprehensive validation for all inputs:
 - Hide fields completely from logs when needed.
 
 This capability is provided using a logging library from Ricardo Petronilho (https://github.com/RicardoPetronilho98/logging). Please refer to documentation in order to setup the library.
-
 
 ## Next Features
 - CI/CD pipeline.
