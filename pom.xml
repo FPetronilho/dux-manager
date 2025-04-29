@@ -176,9 +176,6 @@
 			<artifactId>logging</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
-
-		<!-- Jacoco -->
-
 	</dependencies>
 
 	<!-- ######################################################################### -->
@@ -209,7 +206,7 @@
 		<!-- Jacoco -->
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
-		<!-- SonarQube Properties -->
+		<!-- SonarQube -->
 		<sonar.exclusions>
 			**/target/generated-sources/**/*
 		</sonar.exclusions>
